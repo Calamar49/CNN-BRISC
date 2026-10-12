@@ -1,0 +1,15 @@
+# Sprint 1 (analisis exploratorio y particion de datos)
+numpy
+pandas
+matplotlib
+pillow
+scikit-learn
+jupyter
+nbconvert
+ipykernel
+kaggle
+
+# Opcional en el Sprint 1 (el cargador funciona sin el). Necesario desde el Sprint 2.
+# La version instalada por defecto en Windows es solo CPU; para usar la GPU instala la version CUDA
+# desde https://pytorch.org/get-started/locally/
+# torch

@@ -1,0 +1,24 @@
+ID,Name,Start,End,Progress,Notes
+1,SPRINT 1 - Entender el negocio y los datos,2026-10-01,2026-10-09,0,CRISP-ML(Q): comprension del negocio y de los datos + preparacion. Presentacion al docente el lunes 12
+2,HU01 - Definir el problema: para que y para donde,2026-10-01,2026-10-02,0,Sistema inteligente para clasificar y segmentar tumores cerebrales en MRI. Metas: accuracy >= 95% / recall >= 90% / IoU >= 70%
+3,HU02 - Descargar y explorar BRISC (EDA),2026-10-02,2026-10-06,0,Dataset BRISC 2025: 6000 imagenes y 4793 mascaras. Sin ID de paciente
+4,HU03 - Preparar los datos y definir la particion,2026-10-06,2026-10-09,0,Prueba oficial (1000 imagenes) reservada. Validacion sin fuga evidente
+5,HU04 - Presentacion Sprint 1,2026-10-12,2026-10-12,0,Revision del sprint con el docente (lunes 12) y retrospectiva del equipo
+6,SPRINT 2 - Modelar,2026-10-10,2026-10-23,0,CRISP-ML(Q): modelado. Presentacion al docente el viernes 23
+7,HU05 - Seleccion de arquitectura y modelo base,2026-10-12,2026-10-14,0,CNN con transfer learning (clasificacion) y U-Net (segmentacion)
+8,HU06 - Entrenar el clasificador de tipo de tumor,2026-10-14,2026-10-19,0,4 clases: glioma / meningioma / hipofisis / sin tumor
+9,HU07 - Entrenar el modelo de segmentacion U-Net,2026-10-14,2026-10-19,0,Solo las 4793 imagenes con mascara
+10,HU08 - Ajuste de hiperparametros y mejora,2026-10-19,2026-10-22,0,Aumento de datos y tasa de aprendizaje. La prueba oficial no se usa para decidir
+11,HU11 - (Opcional) Modelo multitarea,2026-10-19,2026-10-22,0,Solo si el cronograma lo permite. Se compara con los dos modelos separados
+12,HU09 - Registro y comparacion de experimentos,2026-10-21,2026-10-23,0,Tabla de experimentos. Versionar en GitHub
+13,HU10 - Presentacion Sprint 2,2026-10-23,2026-10-23,0,Revision del sprint con el docente (viernes) y retrospectiva del equipo
+14,SPRINT 3 - Evaluacion y despliegue (MLOps),2026-10-24,2026-10-30,0,CRISP-ML(Q): evaluacion y despliegue (MLOps basico). Presentacion final el viernes 30
+15,HU12 - Evaluacion en la prueba oficial,2026-10-26,2026-10-27,0,Matriz de confusion y analisis de errores
+16,HU13 - Despliegue: app web de demostracion,2026-10-26,2026-10-29,0,Se sube una MRI y muestra clase / probabilidad / mascara. Modelos cargados desde archivos exportados
+17,HU14 - MLOps: versionado y monitoreo basico,2026-10-27,2026-10-29,0,GitHub y registro de metricas
+18,HU15 - Redaccion del informe final,2026-10-26,2026-10-29,0,Incluye limitaciones y consideraciones eticas
+19,HU16 - Preparacion de la exposicion y demo,2026-10-28,2026-10-29,0,Plan alternativo si falla internet
+20,Ensayo general,2026-10-29,2026-10-29,0,Parte de HU16
+21,HU17 - Presentacion final del proyecto,2026-10-30,2026-10-30,0,Clase de IA (viernes)
+22,Margen de seguridad,2026-10-31,2026-11-01,0,Correcciones de ultimo momento
+23,Fecha limite del docente,2026-11-02,2026-11-02,0,Lunes

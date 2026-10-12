@@ -1,0 +1,11 @@
+# datos y salidas pesadas
+data/
+brisc2025/
+salida_sprint1/
+*.zip
+.ipynb_checkpoints/
+__pycache__/
+# credenciales
+.kaggle/
+kaggle.json
+access_token
