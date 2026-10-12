@@ -1,3 +1,4 @@
+# Sin versiones fijas. Para reproducir exactamente el Sprint 1 usa requirements-probado.txt
 # Sprint 1 (analisis exploratorio y particion de datos)
 numpy
 pandas

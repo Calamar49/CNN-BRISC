@@ -11,7 +11,7 @@ Ejecútalos en este orden. Scripts de apoyo: `descargar_brisc.py` y `ejecutar_sp
 Desde la carpeta raíz del proyecto:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-probado.txt   # versiones exactas con las que se verificó (requirements.txt las deja sin fijar)
 ```
 
 Desde esta carpeta (`03. Implementacion/Sprint 1 - Notebooks`):

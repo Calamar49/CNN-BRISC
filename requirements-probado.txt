@@ -1,0 +1,11 @@
+# Versiones con las que se ejecutó y verificó el Sprint 1 (Windows 11, Python 3.13.14).
+# Uso:  pip install -r requirements-probado.txt
+numpy==2.5.1
+pandas==3.0.5
+matplotlib==3.11.1
+pillow==12.3.0
+scikit-learn==1.9.0
+nbconvert==7.17.1
+nbformat==5.11.1
+ipykernel==7.3.0
+kaggle==2.2.4

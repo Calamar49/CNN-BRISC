@@ -47,14 +47,39 @@ En `03. Implementacion/Sprint 1 - Notebooks/`:
 - `01_HU02_EDA_BRISC.ipynb`: análisis exploratorio del dataset.
 - `02_HU03_particion_y_cargador.ipynb`: verificación, partición sin fuga evidente y cargador de datos.
 
-Se ejecutan **en local** (sin Kaggle Notebooks). Desde esa carpeta:
+Se ejecutan **en local** (sin Kaggle Notebooks). El informe completo del sprint está en `03. Implementacion/Informe del Sprint 1.pdf`.
+
+## Cómo reproducir los resultados del Sprint 1
+
+**Requisitos:** Python 3.11 o superior (se verificó con 3.13.14 en Windows 11), unos 300 MB libres para el dataset y conexión a internet. No hace falta GPU ni PyTorch en el Sprint 1.
 
 ```bash
-pip install -r requirements.txt   # una vez, desde la raíz del proyecto
-python descargar_brisc.py          # baja el dataset a ~/datasets/brisc2025 (fuera de OneDrive)
-python ejecutar_sprint1.py         # corre los dos notebooks y escribe salida_sprint1/
+git clone https://github.com/Calamar49/CNN-BRISC.git
+cd CNN-BRISC
+pip install -r requirements-probado.txt      # versiones exactas con las que se verificó (o requirements.txt, sin fijar versiones)
+cd "03. Implementacion/Sprint 1 - Notebooks"
+python descargar_brisc.py                    # baja BRISC 2025 a ~/datasets/brisc2025 (fuera de OneDrive); no requiere iniciar sesión en Kaggle
+python ejecutar_sprint1.py                   # corre los dos notebooks (unos minutos) y escribe salida_sprint1/
 ```
-Detalles y hallazgos en el README de esa carpeta.
+Alternativa: abrir los notebooks en VS Code (extensión Jupyter) y usar **Run All**, en este orden: `01_HU02_EDA_BRISC.ipynb` y `02_HU03_particion_y_cargador.ipynb`. Si el dataset ya está en otra carpeta, define la variable de entorno `BRISC_ROOT` con esa ruta.
+
+**Qué debes obtener** (si algo no coincide, revisa el notebook ejecutado en `salida_sprint1/notebooks_ejecutados/`):
+
+| Comprobación | Valor esperado |
+|---|---|
+| Imágenes de clasificación | 6.000 (5.000 entrenamiento y 1.000 prueba) |
+| Por clase (entrenamiento / prueba) | glioma 1.147 / 254 · meningioma 1.329 / 306 · hipófisis 1.457 / 300 · sin tumor 1.067 / 140 |
+| Pares imagen–máscara | 4.793 (las 1.207 imágenes sin tumor no tienen máscara) |
+| Combinaciones de tamaño de imagen | 183 (la más frecuente, 512×512 con 4.881) |
+| Duplicados exactos (SHA-256) en clasificación | 96 archivos; 7 hashes repartidos entre entrenamiento y prueba |
+| Grupos de imágenes casi idénticas (umbral 16) | 4.938 grupos en el entrenamiento oficial; el mayor, de 3 |
+| Imágenes de prueba con vecino casi idéntico en entrenamiento | 113 (dHash) y 123 (correlación) de 1.000 |
+| Partición propia | 3.999 entrenamiento / 1.001 validación / 1.000 prueba oficial |
+| Lote de prueba del cargador | imágenes 8×3×256×256 y máscaras 8×1×256×256 |
+
+La partición es determinista (semilla 42): en una ejecución limpia, sin PyTorch, los archivos `particion/*.csv` y `eda_resumen.json` salieron idénticos byte a byte a los del primer análisis. Archivos que se generan en `salida_sprint1/` (no se sube a Git): `figuras_eda/`, `eda_resumen.json`, `particion/` (con `config_preparacion.json`), `lote_de_prueba.png` y `notebooks_ejecutados/`.
+
+Detalles y hallazgos en el README de `Sprint 1 - Notebooks/`.
 
 ## Estado
 Los notebooks del Sprint 1 se ejecutaron con el dataset real y las cifras (6.000 imágenes, 4.793 pares de segmentación, cantidades por clase) coinciden con el artículo; las diferencias menores (planos de corte, máscaras no binarias, tamaños variables, duplicados) están en el README de `Sprint 1 - Notebooks/`. Los campos marcados `[completar]` en los documentos los llena el equipo con el avance real.
