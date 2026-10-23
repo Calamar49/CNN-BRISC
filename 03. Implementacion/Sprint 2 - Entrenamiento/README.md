@@ -53,9 +53,13 @@ Cada corrida:
 
 Entorno: Windows 11, Python 3.12.8, GPU NVIDIA RTX 5060 Laptop (8 GB), `torch==2.11.0+cu128`. Métricas sobre validación
 (1.001 imágenes de clasificación, 787 con máscara); **la prueba oficial no se usó** (se evalúa una sola vez en HU12, Sprint 3).
-Las 13 corridas completas, con configuración y tiempo, están en [`experimentos.csv`](experimentos.csv). Informe
-completo con gráficas en Word: `herramientas/informe_sprint2.docx` (generado por `herramientas/gen_figs_sprint2.py`
-+ `herramientas/build_informe_sprint2.py`, con datos e imágenes reales de este Sprint).
+Las 13 corridas completas, con configuración y tiempo, están en [`experimentos.csv`](experimentos.csv).
+
+**Informe y presentación** (generados con datos e imágenes 100 % reales de este Sprint, ver `herramientas/README.md`):
+- `herramientas/informe_sprint2.docx` — informe completo (30 encabezados, 16 tablas, 13 figuras): metodología,
+  resultados de HU05 a HU09, desglose por clase/plano/tipo de archivo, limitaciones y glosario.
+- `herramientas/presentacion_sprint2.pptx` — 18 diapositivas para la Revisión del Sprint 2 (23 oct), mismo
+  diseño blanco y formal del Sprint 1.
 
 ### Modelo base (HU05/HU06/HU07, semilla 42, config. de partida)
 
