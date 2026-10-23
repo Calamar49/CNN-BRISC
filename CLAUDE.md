@@ -64,4 +64,5 @@ Versiones probadas del Sprint 1 en `requirements-probado.txt`.
 - Antes de proponer algo, lee `docs/TRASPASO_SPRINT2.md` y el informe `03. Implementacion/Informe del Sprint 1.pdf`.
 - Código nuevo del Sprint 2 en `03. Implementacion/Sprint 2 - Entrenamiento/`; resultados en `salida_sprint2/` (ignorada por Git).
 - Cada experimento se registra en `experimentos.csv` (columnas en el documento de traspaso). Commits en español, claros y pequeños.
+- Además del modelado, cada sprint deja evidencia de gestión (backlog del sprint, Trello, informe de estado, minuta, riesgos, presentación y retrospectiva con el equipo): ver la sección 15 de `docs/TRASPASO_SPRINT2.md`.
 - Si algo del traspaso no coincide con lo que ves en el repositorio o en Trello, **pregunta al equipo** antes de asumir.

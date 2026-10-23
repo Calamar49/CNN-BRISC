@@ -222,3 +222,34 @@ Si el tiempo no alcanza, **recortar primero** HU11 (multitarea, opcional) y la r
 - **Clasificación:** decir qué tipo de tumor hay. **Segmentación:** marcar en qué píxeles está.
 - **IoU / Dice:** cuánto se solapa la máscara predicha con la real. **Recall:** de los casos reales de una clase, cuántos detecta el modelo.
 - **Transfer learning:** partir de una red entrenada con otro dataset (ImageNet). **Fuga:** que imágenes casi iguales caigan en entrenamiento y en evaluación, inflando los resultados.
+
+## 15. Entregables de gestión del Sprint 2 (Scrum) y calidad en la fase de modelado (CRISP-ML(Q))
+El Sprint 2 no son solo modelos: en Scrum cada sprint deja evidencia de gestión, y en CRISP-ML(Q) cada fase incluye un paso de calidad.
+
+### 15.1 Qué hay que dejar al cierre del Sprint 2 (propuesta, siguiendo lo hecho en el Sprint 1)
+| Entregable | Dónde | Qué hacer |
+|---|---|---|
+| Backlog del Sprint 2 | `02. Planificacion/Backlog del Sprint.xlsx`, hoja «Sprint 2» | Hoy tiene ejemplos de la plantilla: reemplazarlos por las tareas reales de HU05 a HU09, con responsable, estado y horas estimadas (propuesta del equipo). Corregir también las hojas «Sprints» de los dos backlogs (fechas de 2018). |
+| Tablero de Trello | enlace en la sección 13 | Mover las tarjetas HU05–HU09 a «En progreso» y «Terminado» según avancen; marcar los criterios de aceptación **solo cuando estén cumplidos y revisados por otra persona** (definición de terminado propuesta en la tarjeta de metodología). Dejar comentarios con resultados, como se hizo en HU02 y HU03. |
+| Informe de Estado del Proyecto | `03. Implementacion/Informe de Estado del Proyecto.docx` | Actualizar el periodo, el avance (historias terminadas de 17) y los riesgos. |
+| Minuta de Reunión | `03. Implementacion/Minuta de Reunión.docx` | Registrar la planificación y la revisión del Sprint 2 con fecha, lugar y acuerdos reales del equipo. |
+| Registro de Riesgos e Impedimentos | `02. Planificacion/Registro de Riesgos.xls`, `03. Implementacion/Registro de Impedimentos.xlsx` | Agregar R09 y los riesgos nuevos; anotar cada impedimento real (por ejemplo, falta de GPU o de tiempo). |
+| Revisión del Sprint 2 (HU10, 23 oct) | `04. Revision y retrospectiva/` | Presentación con el mismo diseño blanco del Sprint 1: copiar y adaptar `herramientas/deck_light.py`. Estructura sugerida: meta del sprint, qué se hizo por historia, resultados en validación, tabla de experimentos, decisiones, riesgos y plan del Sprint 3. Repartir la exposición en bloques seguidos y equitativos. |
+| Retrospectiva del Sprint 2 | misma carpeta | Hacerla **con el equipo**; no escribir respuestas por ellos. |
+| Código y resultados | `03. Implementacion/Sprint 2 - Entrenamiento/` | Con README que explique cómo reproducir (comandos, semilla, versiones). |
+| Cronograma | `02. Planificacion/` | Actualizar el avance (columna Progress) del CSV del Gantt. |
+
+### 15.2 Calidad en CRISP-ML(Q) para la fase de modelado
+En CRISP-ML(Q), cada fase pide definir requisitos y restricciones, identificar riesgos y mitigarlos, y documentarlo. Para el modelado, en este proyecto eso significa:
+- **Requisitos:** las metas del acta (accuracy ≥ 95 %, recall ≥ 90 % por clase, IoU ≥ 70 %) y las restricciones (GPU de 6 GB, plazos, solo T1 con contraste).
+- **Riesgos y mitigación:** los de la sección 9 (fuga, atajos R09, memoria de GPU, arquitecturas inestables).
+- **Selección de modelos documentada:** cada intento queda en `experimentos.csv` y la elección se justifica con datos de validación.
+- **Reproducibilidad:** semilla fija, configuración guardada, versiones de las librerías y comandos en el README.
+- **Robustez:** resultados por clase, por plano y por tipo de archivo, con 2 o 3 semillas para ver la variabilidad.
+- **Sin fuga hacia la evaluación:** la prueba oficial no se usa hasta HU12.
+- **Honestidad:** distinguir siempre lo medido por el equipo de lo que viene del artículo, y lo propuesto de lo confirmado.
+
+### 15.3 Lo que este traspaso no puede resolver
+- **No hay garantía de que el Sprint 2 salga completo:** depende del tiempo (quedan días contados), de la GPU y del trabajo del equipo. El documento da el plan y el contexto, no los resultados.
+- **El criterio del equipo y del docente:** las decisiones marcadas como propuesta (arquitecturas, hiperparámetros, estructura) hay que confirmarlas con el equipo; si el docente pide otra cosa, prevalece.
+- **Lo que está solo en Trello o en conversaciones** (por ejemplo, los criterios de HU05 a HU17 y cualquier acuerdo verbal) no está en este repositorio: revisarlo en el tablero.
