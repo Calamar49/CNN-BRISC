@@ -1,14 +1,13 @@
 # Sprint 2 (modelado). Incluye lo del Sprint 1 (requirements-probado.txt) mas lo necesario para entrenar.
-# No tiene versiones fijas porque todavia no se instalaron ni probaron: despues de instalar, fijarlas con  pip freeze.
+# Versiones probadas el 22 de octubre de 2026, Windows 11, Python 3.12.8, GPU NVIDIA RTX 5060 Laptop (8 GB).
 #
-# PyTorch con GPU: NO se instala con pip a secas (eso da la version solo CPU). Elegir el comando en
-# https://pytorch.org/get-started/locally/ y comprobar con:
-#     python -c "import torch; print(torch.cuda.is_available())"
-#
-# torch
-# torchvision
-segmentation-models-pytorch   # opcional: U-Net con codificador preentrenado (si no instala con tu Python, escribir la U-Net con torchvision)
-timm                          # opcional: lo usa segmentation-models-pytorch
-tensorboard                   # opcional: curvas de entrenamiento
-onnx                          # exportacion para la aplicacion web (Sprint 3)
-onnxruntime
+# PyTorch con GPU: NO se instala con pip a secas (eso da la version solo CPU). Se instalo con:
+#     pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+#     python -c "import torch; print(torch.cuda.is_available())"   # True
+torch==2.11.0+cu128
+torchvision==0.26.0+cu128
+segmentation-models-pytorch==0.5.0   # U-Net con codificador preentrenado (si no instala con tu Python, escribir la U-Net con torchvision)
+timm==1.0.30                         # lo usa segmentation-models-pytorch
+tensorboard==2.21.0                  # opcional: curvas de entrenamiento
+# onnx                                # exportacion para la aplicacion web (Sprint 3); instalar cuando se necesite
+# onnxruntime

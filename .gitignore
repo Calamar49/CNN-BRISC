@@ -5,6 +5,7 @@ salida_sprint1/
 *.zip
 .ipynb_checkpoints/
 __pycache__/
+.venv/
 # credenciales
 .kaggle/
 kaggle.json
