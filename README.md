@@ -60,6 +60,9 @@ pip install -r requirements-probado.txt      # versiones exactas con las que se 
 cd "03. Implementacion/Sprint 1 - Notebooks"
 python descargar_brisc.py                    # baja BRISC 2025 a ~/datasets/brisc2025 (fuera de OneDrive); no requiere iniciar sesión en Kaggle
 python ejecutar_sprint1.py                   # corre los dos notebooks (unos minutos) y escribe salida_sprint1/
+python perfil_datos.py                       # opcional (~4 min): perfil de intensidad, ubicación y contraste del tumor, y entrenamiento vs prueba; escribe salida_sprint1/perfil_datos/
+python preparar_dataset.py                   # genera el dataset ya preparado (256x256, máscaras binarias, train/val/test) en ~/datasets/brisc2025_preparado
+python verificar_preparado.py                # comprueba que quedó completo y que coincide con el cargador
 ```
 Alternativa: abrir los notebooks en VS Code (extensión Jupyter) y usar **Run All**, en este orden: `01_HU02_EDA_BRISC.ipynb` y `02_HU03_particion_y_cargador.ipynb`. Si el dataset ya está en otra carpeta, define la variable de entorno `BRISC_ROOT` con esa ruta.
 
@@ -80,6 +83,11 @@ Alternativa: abrir los notebooks en VS Code (extensión Jupyter) y usar **Run Al
 La partición es determinista (semilla 42): en una ejecución limpia, sin PyTorch, los archivos `particion/*.csv` y `eda_resumen.json` salieron idénticos byte a byte a los del primer análisis. Archivos que se generan en `salida_sprint1/` (no se sube a Git): `figuras_eda/`, `eda_resumen.json`, `particion/` (con `config_preparacion.json`), `lote_de_prueba.png` y `notebooks_ejecutados/`.
 
 Detalles y hallazgos en el README de `Sprint 1 - Notebooks/`.
+
+## Para continuar con el Sprint 2
+- `CLAUDE.md`: contexto y reglas del proyecto (lo lee Claude Code automáticamente).
+- `docs/TRASPASO_SPRINT2.md`: estado, qué falta, cómo se hará, entorno y versiones, plan de tiempo y pendientes.
+- `herramientas/`: generadores del informe y de las presentaciones.
 
 ## Estado
 Los notebooks del Sprint 1 se ejecutaron con el dataset real y las cifras (6.000 imágenes, 4.793 pares de segmentación, cantidades por clase) coinciden con el artículo; las diferencias menores (planos de corte, máscaras no binarias, tamaños variables, duplicados) están en el README de `Sprint 1 - Notebooks/`. Los campos marcados `[completar]` en los documentos los llena el equipo con el avance real.

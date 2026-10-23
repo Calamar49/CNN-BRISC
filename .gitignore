@@ -9,3 +9,11 @@ __pycache__/
 .kaggle/
 kaggle.json
 access_token
+
+# Sprint 2 y herramientas
+salida_sprint2/
+*.pt
+*.pth
+*.ckpt
+herramientas/figs/
+herramientas/informe_sprint1.docx

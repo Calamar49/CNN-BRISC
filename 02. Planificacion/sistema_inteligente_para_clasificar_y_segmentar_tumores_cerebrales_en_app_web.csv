@@ -1,9 +1,9 @@
 ID,Name,Start,End,Progress,Notes
-1,SPRINT 1 - Entender el negocio y los datos,2026-10-01,2026-10-09,0,CRISP-ML(Q): comprension del negocio y de los datos + preparacion. Presentacion al docente el lunes 12
-2,HU01 - Definir el problema: para que y para donde,2026-10-01,2026-10-02,0,Sistema inteligente para clasificar y segmentar tumores cerebrales en MRI. Metas: accuracy >= 95% / recall >= 90% / IoU >= 70%
-3,HU02 - Descargar y explorar BRISC (EDA),2026-10-02,2026-10-06,0,Dataset BRISC 2025: 6000 imagenes y 4793 mascaras. Sin ID de paciente
-4,HU03 - Preparar los datos y definir la particion,2026-10-06,2026-10-09,0,Prueba oficial (1000 imagenes) reservada. Validacion sin fuga evidente
-5,HU04 - Presentacion Sprint 1,2026-10-12,2026-10-12,0,Revision del sprint con el docente (lunes 12) y retrospectiva del equipo
+1,SPRINT 1 - Entender el negocio y los datos,2026-10-01,2026-10-09,100,CRISP-ML(Q): comprension del negocio y de los datos + preparacion. Sprint concluido: 4 de 4 historias. Presentacion al docente el lunes 12
+2,HU01 - Definir el problema: para que y para donde,2026-10-01,2026-10-02,100,Acta de Constitucion firmada y backlog de 17 historias en Trello. Metas: accuracy >= 95% / recall >= 90% / IoU >= 70%
+3,HU02 - Descargar y explorar BRISC (EDA),2026-10-02,2026-10-06,100,Verificado: 6000 imagenes y 4793 pares imagen-mascara (sin tumor no tiene mascara). Mascaras no binarias; 183 tamanos de imagen; sin ID de paciente. Licencia CC BY 4.0
+4,HU03 - Preparar los datos y definir la particion,2026-10-06,2026-10-09,100,Prueba oficial (1000 imagenes) reservada. Particion 3999 / 1001 / 1000 con grupos por hash perceptual. Cargador de datos probado
+5,HU04 - Presentacion Sprint 1,2026-10-12,2026-10-12,100,Revision del sprint con el docente (lunes 12) y retrospectiva del equipo. Informe del Sprint 1 en PDF
 6,SPRINT 2 - Modelar,2026-10-10,2026-10-23,0,CRISP-ML(Q): modelado. Presentacion al docente el viernes 23
 7,HU05 - Seleccion de arquitectura y modelo base,2026-10-12,2026-10-14,0,CNN con transfer learning (clasificacion) y U-Net (segmentacion)
 8,HU06 - Entrenar el clasificador de tipo de tumor,2026-10-14,2026-10-19,0,4 clases: glioma / meningioma / hipofisis / sin tumor

@@ -1,0 +1,14 @@
+# Sprint 2 (modelado). Incluye lo del Sprint 1 (requirements-probado.txt) mas lo necesario para entrenar.
+# No tiene versiones fijas porque todavia no se instalaron ni probaron: despues de instalar, fijarlas con  pip freeze.
+#
+# PyTorch con GPU: NO se instala con pip a secas (eso da la version solo CPU). Elegir el comando en
+# https://pytorch.org/get-started/locally/ y comprobar con:
+#     python -c "import torch; print(torch.cuda.is_available())"
+#
+# torch
+# torchvision
+segmentation-models-pytorch   # opcional: U-Net con codificador preentrenado (si no instala con tu Python, escribir la U-Net con torchvision)
+timm                          # opcional: lo usa segmentation-models-pytorch
+tensorboard                   # opcional: curvas de entrenamiento
+onnx                          # exportacion para la aplicacion web (Sprint 3)
+onnxruntime

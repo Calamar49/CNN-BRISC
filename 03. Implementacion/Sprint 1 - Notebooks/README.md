@@ -5,7 +5,7 @@
 | `01_HU02_EDA_BRISC.ipynb` | HU02 | Verifica la estructura del dataset, cuenta imágenes por clase, partición y plano (y las compara con el artículo), comprueba los pares imagen–máscara, mide el tamaño del tumor, revisa el manifest, genera gráficos y una galería, y guarda `eda_resumen.json`. |
 | `02_HU03_particion_y_cargador.ipynb` | HU03 | Revisa archivos corruptos y pares, agrupa imágenes casi idénticas (dHash de 256 bits), parte entrenamiento/validación sin dividir grupos (la prueba oficial no se toca), guarda las listas de partición y prueba un cargador de datos. |
 
-Ejecútalos en este orden. Scripts de apoyo: `descargar_brisc.py` y `ejecutar_sprint1.py`.
+Ejecútalos en este orden. Scripts de apoyo: `descargar_brisc.py`, `ejecutar_sprint1.py`, `preparar_dataset.py` (genera el dataset ya preparado en `~/datasets/brisc2025_preparado`), `verificar_preparado.py` y `perfil_datos.py` (opcional: mide intensidad, encuadre, ubicación y contraste del tumor, y compara entrenamiento con prueba; escribe `salida_sprint1/perfil_datos/`).
 
 ## Pasos (Windows, PowerShell o terminal de VS Code)
 Desde la carpeta raíz del proyecto:
