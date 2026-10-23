@@ -27,6 +27,20 @@ Lo que está medido o verificado se dice como tal; lo que es **propuesta** o **p
 | Informe y presentaciones del Sprint 1 | Hechos (`03. Implementacion/Informe del Sprint 1.pdf`/`.docx`, `04. Revision y retrospectiva/Revisión del Sprint.pptx`). La Retrospectiva tiene los campos por llenar. |
 | Retraso | Si no hay resultados de modelos para el 23 de octubre, véase el plan de tiempo (sección 10). |
 
+### Actualización — 23 de octubre de 2026 (técnico, hecho con Claude Code en una sesión de trabajo)
+
+HU05 a HU09 ya tienen código y resultados reales en el repositorio, en `03. Implementacion/Sprint 2 - Entrenamiento/`:
+
+| Parte | Estado |
+|---|---|
+| HU05 | Hecho: 2 arquitecturas de clasificación con transfer learning (EfficientNetB0, ResNet50) y U-Net definida para segmentación, ambas entrenadas con métrica registrada. |
+| HU06 | Hecho: EfficientNetB0 elegida, 99,52 % de recall medio en validación (modelo base); curvas y mejor checkpoint guardados. |
+| HU07 | Hecho: U-Net (encoder ResNet34) entrenada solo con imágenes con máscara, 79,70 % de IoU en validación (modelo base); ejemplos de máscara predicha guardados. |
+| HU08 | Hecho: 3 configuraciones extra probadas por tarea (lr, batch, sin aumento) frente al modelo base; ganadoras `batch=64` (clasificador) y `lr=1e-4` (U-Net); entrenamiento final repetido con 2 semillas más (promedios: 99,57 % ± 0,12 % recall medio; 80,12 % ± 0,27 % IoU). |
+| HU09 | Hecho: 13 entrenamientos registrados en `experimentos.csv` con configuración, métricas y tiempo; tabla completa incluida en `herramientas/informe_sprint2.docx`. |
+| Riesgo R09 | Investigado con datos reales (`evaluar_grupos.py`): sin diferencias relevantes por plano de corte; el glioma es la clase más difícil de segmentar (67,43 % IoU) y hay una brecha gris/RGB de ~8 puntos en la U-Net, probablemente explicada por la dificultad propia del glioma más que por un atajo puro — detalle en el README de `Sprint 2 - Entrenamiento/` y en el informe. |
+| **Lo que sigue faltando (no técnico, a cargo del equipo)** | Backlog del Sprint 2 en Trello/Excel, Informe de Estado, Minuta, Registro de Riesgos (agregar R09), Retrospectiva del Sprint 2 y la presentación del Sprint 2 (HU10, 23 oct) — ver sección 15.1. |
+
 ## 3. Lo que se hizo en el Sprint 1 (resumen; detalle en el informe)
 **Etapa 1 · Comprensión del negocio (HU01).** Acta de Constitución firmada, Product Backlog de 17 historias en Trello (criterios de aceptación, puntos, dependencias, fase CRISP-ML(Q)), Gantt y CSV, plantillas de gestión llenas, datos públicos del problema (GLOBOCAN, Minsa, SuSalud), objetivos, metas y factibilidad. Presupuesto programado: S/ 0.
 

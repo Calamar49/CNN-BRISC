@@ -1,8 +1,9 @@
 # Herramientas
 
-Generadores que se usaron para producir el informe y las presentaciones del Sprint 1. Usan rutas relativas al repositorio.
-Requieren `python-docx`, `python-pptx`, `lxml`, `matplotlib`, `pandas` y `pillow` (`pip install python-docx python-pptx lxml matplotlib pandas pillow`),
-y haber ejecutado antes el Sprint 1 (`python ejecutar_sprint1.py` y `python perfil_datos.py`) para tener `salida_sprint1/`.
+Generadores que se usaron para producir los informes y las presentaciones de los sprints. Usan rutas relativas al repositorio.
+Requieren `python-docx`, `python-pptx`, `lxml`, `matplotlib`, `pandas` y `pillow` (`pip install python-docx python-pptx lxml matplotlib pandas pillow`).
+
+**Sprint 1** (requieren haber ejecutado antes `python ejecutar_sprint1.py` y `python perfil_datos.py`, para tener `salida_sprint1/`):
 
 | Script | Qué hace |
 |---|---|
@@ -11,4 +12,15 @@ y haber ejecutado antes el Sprint 1 (`python ejecutar_sprint1.py` y `python perf
 | `deck_light.py` | Genera `Revisión del Sprint.pptx` y `Retrospectiva del Sprint.pptx` con diseño blanco; **sobrescribe** los de `04. Revision y retrospectiva/` |
 
 Orden: `python gen_figs.py` → `python build_informe.py` / `python deck_light.py`.
-Estilo: fondo blanco, formal; paleta `#1F3864 #5B84B1 #2B7A8B #8FB89A #9AA5B1`; sin naranja. No son parte del modelo ni hace falta ejecutarlos para el Sprint 2.
+
+**Sprint 2** (requieren haber entrenado los modelos de `03. Implementacion/Sprint 2 - Entrenamiento/`, para tener `salida_sprint2/` y `experimentos.csv`):
+
+| Script | Qué hace |
+|---|---|
+| `gen_figs_sprint2.py` | Gráficos reales del Sprint 2 (curvas de entrenamiento, matriz de confusión, comparación de configuraciones HU08, desglose R09) en `herramientas/figs_sprint2/`. No inventa datos: todo sale de `salida_sprint2/*.csv` y `experimentos.csv`. |
+| `build_informe_sprint2.py` | Genera el informe del Sprint 2 en Word (`herramientas/informe_sprint2.docx`) con esas figuras y la tabla completa de `experimentos.csv`. |
+
+Orden: `python gen_figs_sprint2.py` → `python build_informe_sprint2.py`.
+
+Estilo: fondo blanco, formal; paleta `#1F3864 #5B84B1 #2B7A8B #8FB89A #9AA5B1`; sin naranja. Los `.docx` y las carpetas de
+figuras generadas no se suben a Git (son reproducibles con estos scripts); solo se sube el código.

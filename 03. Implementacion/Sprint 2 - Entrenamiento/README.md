@@ -53,7 +53,9 @@ Cada corrida:
 
 Entorno: Windows 11, Python 3.12.8, GPU NVIDIA RTX 5060 Laptop (8 GB), `torch==2.11.0+cu128`. Métricas sobre validación
 (1.001 imágenes de clasificación, 787 con máscara); **la prueba oficial no se usó** (se evalúa una sola vez en HU12, Sprint 3).
-Las 11 corridas completas, con configuración y tiempo, están en [`experimentos.csv`](experimentos.csv).
+Las 13 corridas completas, con configuración y tiempo, están en [`experimentos.csv`](experimentos.csv). Informe
+completo con gráficas en Word: `herramientas/informe_sprint2.docx` (generado por `herramientas/gen_figs_sprint2.py`
++ `herramientas/build_informe_sprint2.py`, con datos e imágenes reales de este Sprint).
 
 ### Modelo base (HU05/HU06/HU07, semilla 42, config. de partida)
 
@@ -78,13 +80,17 @@ Las 11 corridas completas, con configuración y tiempo, están en [`experimentos
 
 | Configuración | val_IoU | Δ vs. base |
 |---|---|---|
-| Base: lr=3e-4, con aumento | 79.70 % | — |
+| Base: lr=3e-4, batch=8, con aumento | 79.70 % | — |
 | **lr=1e-4** ← elegida | **79.78 %** | **+0.08 pp** |
 | sin aumento de datos (ablación) | 79.08 % | −0.62 pp |
+| batch=16 | 80.09 % | +0.39 pp |
 
-El aumento de datos mejora ambas tareas (quitarlo empeora el resultado en los dos casos), y la mejora de
-ajustar batch/lr es pequeña (< 1 punto porcentual) frente al modelo base — con este dataset y arquitecturas,
-el modelo base ya estaba cerca del óptimo.
+El aumento de datos mejora ambas tareas (quitarlo empeora el resultado en los dos casos). El ajuste de lr/batch
+trae mejoras pequeñas (< 1 punto porcentual) frente al modelo base. En la U-Net, `batch=16` dio un resultado a
+una sola semilla ligeramente mejor que `lr=1e-4` (80.09 % vs. 79.78 %) — un empate técnico dentro del margen de
+variación entre semillas (~0.3 pp, ver abajo). Se mantiene **`lr=1e-4`** como configuración elegida porque ya
+tenía las 3 semillas corridas antes de probar `batch=16`; no se repitió el entrenamiento con `batch=16` para no
+duplicar cómputo por una diferencia no concluyente.
 
 ### Entrenamiento final con 2 semillas adicionales (configuración ganadora de HU08)
 
