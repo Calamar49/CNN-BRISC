@@ -22,7 +22,7 @@ Lo que está medido o verificado se dice como tal; lo que es **propuesta** o **p
 |---|---|
 | HU01 a HU04 (Sprint 1) | Terminadas. Acta firmada. En Trello, HU01–HU03 están en «Terminado»; en HU04 faltan por marcar la retroalimentación del docente y la revisión del backlog del Sprint 2. |
 | Datos | Descargados, analizados, preparados y verificados (sección 4). |
-| HU05–HU09 (Sprint 2) | **Sin código en el repositorio.** Confirmar con el equipo. |
+| HU05–HU09 (Sprint 2) | **Sin código en el repositorio.** En Trello, HU05 está en «En progreso» (desde el 16 oct) y HU06–HU17 siguen en «Product Backlog». Confirmar con el equipo. |
 | Entrenamiento de modelos | No hay ningún modelo entrenado ni métrica de desempeño en el repositorio. |
 | Informe y presentaciones del Sprint 1 | Hechos (`03. Implementacion/Informe del Sprint 1.pdf`/`.docx`, `04. Revision y retrospectiva/Revisión del Sprint.pptx`). La Retrospectiva tiene los campos por llenar. |
 | Retraso | Si no hay resultados de modelos para el 23 de octubre, véase el plan de tiempo (sección 10). |
@@ -79,12 +79,16 @@ Fechas del Gantt entre paréntesis; puntos y dependencias del Product Backlog en
 | HU10 | Presentación del Sprint 2 | 23 oct | 2 | HU09 |
 | HU11 | (Opcional) Modelo multitarea con encoder compartido | solo si hay tiempo | 8 | HU09 |
 
-**Criterios de aceptación propuestos** (los de Trello para HU05+ no se revisaron en esta sesión: cotejarlos y reconciliar):
-- HU05: arquitecturas candidatas justificadas y un modelo base entrenado con métricas en validación y la semilla registrada.
-- HU06: clasificador con accuracy y recall por clase en validación, matriz de confusión y curva de entrenamiento.
-- HU07: U-Net con IoU y Dice en validación (solo imágenes con tumor), ejemplos visuales de predicción.
-- HU08: al menos una mejora medida frente al modelo base (aumento, tasa de aprendizaje, pérdida), sin usar la prueba.
-- HU09: tabla de experimentos (`experimentos.csv`) con todos los intentos y una justificación de qué modelo se elige.
+**Criterios de aceptación que figuran en Trello** (revisados el 22 de octubre; ninguno está marcado todavía):
+- **HU05:** al menos 2 arquitecturas de clasificación candidatas con transfer learning, justificadas · arquitectura U-Net definida para la segmentación · modelo base entrenado y su métrica registrada.
+- **HU06:** curvas de entrenamiento y validación guardadas · accuracy y recall por clase en validación reportados · mejor modelo guardado junto con su configuración.
+- **HU07:** entrenamiento solo con imágenes que tienen máscara · IoU en validación reportado (referencia del artículo: U-Net 75,7 %) · ejemplos de máscara predicha frente a la real.
+  *Aclaración:* las 4.793 imágenes con máscara están repartidas en entrenamiento (3.146), validación (787) y prueba (860); entrenar solo con las 3.146 de entrenamiento.
+- **HU08:** al menos 3 configuraciones probadas (tasa de aprendizaje, aumento de datos, tamaño de lote u otras) · mejora medida frente al modelo base · la prueba oficial no se usa para decidir qué configuración elegir.
+- **HU09:** tabla con parámetros, métricas y tiempo de entrenamiento de cada experimento · modelo(s) elegido(s) con su justificación · tabla incluida en el informe final.
+- **HU10 a HU17:** no se revisaron sus checklists; verlos en el tablero.
+
+**Estado de las tarjetas en Trello (22 de octubre):** HU01–HU03 en «Terminado» (con fecha cumplida y miembros asignados); HU04 sigue en la lista «Sprint 1» sin marcar (faltan la retroalimentación del docente y la revisión del backlog del Sprint 2); **HU05 en «En progreso» desde el 16 de octubre**; **HU06 a HU17 siguen en «Product Backlog»** y la lista «Sprint 2 (10-22 oct)» está vacía, es decir, la planificación del Sprint 2 no está reflejada en el tablero. Ninguna de HU05–HU11 tiene miembros, comentarios ni criterios marcados. **Las fechas de entrega de HU05 a HU09 vencen el 22 de octubre (hoy)** y la de HU10 el 23.
 
 ## 6. Cómo lo haremos (propuesta técnica; confirmar con el equipo)
 ### 6.1 Clasificador (HU05, HU06, HU08)
@@ -199,7 +203,7 @@ Si el tiempo no alcanza, **recortar primero** HU11 (multitarea, opcional) y la r
 ## 11. Pendientes heredados del Sprint 1
 - **Excel:** las hojas «Sprints» de `Backlog del Producto.xlsx` y `Backlog Detallado del Producto.xlsx` conservan las fechas de la plantilla (2018); la hoja «Sprint 2» de `Backlog del Sprint.xlsx` conserva ejemplos de la plantilla (Luis, Jorge, Carolina, Lucía); `Registro de Impedimentos.xlsx` solo tiene el encabezado.
 - **Registro de Riesgos:** agregar el R09 propuesto.
-- **Trello:** en HU04, marcar la retroalimentación del docente y la revisión del backlog del Sprint 2; comentarios de HU02 y HU03 dicen «pendiente de revisión»; revisar los criterios de HU05 a HU17.
+- **Trello:** en HU04, marcar la retroalimentación del docente y la revisión del backlog del Sprint 2; comentarios de HU02 y HU03 dicen «pendiente de revisión»; mover HU06 a HU11 a la lista «Sprint 2», asignar responsables y revisar los criterios de HU10 a HU17. En Trello aparece como miembro «Joseph Zevallos Acuña» y el equipo de los documentos tiene a «Mamani Acuña Frank Joseph»: comprobar que los nombres coincidan.
 - **Retrospectiva del Sprint:** llenar los campos con el equipo (el resto de la presentación está hecho).
 - **Informe de Estado y Minuta:** campos del equipo por llenar (fecha y lugar de la reunión, gastos registrados).
 - **Informe del Sprint 1:** las secciones 2.3 y 2.4 aún incluyen los grupos hipotéticos, el escenario de clínica con supuestos y el ejemplo de prevalencia (se quitaron de las diapositivas).
