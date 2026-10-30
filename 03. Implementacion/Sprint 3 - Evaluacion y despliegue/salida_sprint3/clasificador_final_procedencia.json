@@ -1,0 +1,13 @@
+{
+  "nombre": "clasificador_final",
+  "tarea": "clasificacion",
+  "fecha": "2026-10-30",
+  "datos": "train+val (entrenamiento + validacion del Sprint 1)",
+  "epocas": 10,
+  "lr": 0.0003,
+  "batch": 64,
+  "semilla": 42,
+  "optimizador": "AdamW",
+  "arquitectura": "efficientnet_b0",
+  "encoder": null
+}

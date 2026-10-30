@@ -1,0 +1,13 @@
+{
+  "nombre": "unet_final",
+  "tarea": "segmentacion",
+  "fecha": "2026-10-30",
+  "datos": "train+val (entrenamiento + validacion del Sprint 1, solo con mascara)",
+  "epocas": 26,
+  "lr": 0.0001,
+  "batch": 8,
+  "semilla": 42,
+  "optimizador": "AdamW",
+  "arquitectura": "unet_resnet34",
+  "encoder": "resnet34"
+}

@@ -1,4 +1,8 @@
-# datos y salidas pesadas
+# Solo se excluye lo que las reglas del proyecto prohiben subir (CLAUDE.md regla 5, PLAN_SPRINT3 regla 5):
+# el dataset, los pesos de modelos, los modelos exportados (archivos grandes), la base de datos de la demo y
+# las credenciales. Los informes, presentaciones, figuras y tablas de resultados SI se suben.
+
+# dataset y salidas derivadas del dataset (pesadas; se regeneran desde el dataset)
 data/
 brisc2025/
 salida_sprint1/
@@ -6,28 +10,23 @@ salida_sprint1/
 .ipynb_checkpoints/
 __pycache__/
 .venv/
+
+# pesos de modelos y modelos exportados (regenerables; su SHA-256 esta en registro_modelos.json;
+# la U-Net en ONNX pesa ~98 MB, al borde del limite de GitHub: ver PLAN_SPRINT3 seccion 6.2)
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.onnx.data
+
+# Sprint 2: solo se excluyen los checkpoints pesados (las figuras e informe SI se suben)
+03. Implementacion/Sprint 2 - Entrenamiento/salida_sprint2/
+
+# Sprint 3: solo se excluye la base de datos y las imagenes de ejemplo de la app (contienen imagenes del
+# dataset y se regeneran). Las tablas de resultados (salida_sprint3/*.json, *.csv) y las figuras SI se suben.
+03. Implementacion/Sprint 3 - Evaluacion y despliegue/app/datos_demo/
+
 # credenciales
 .kaggle/
 kaggle.json
 access_token
-
-# Sprint 2 y herramientas
-salida_sprint2/
-*.pt
-*.pth
-*.ckpt
-herramientas/figs/
-herramientas/informe_sprint1.docx
-herramientas/figs_sprint2/
-herramientas/informe_sprint2.docx
-herramientas/presentacion_sprint2.pptx
-
-# Sprint 3 (evaluacion y despliegue): pesos, modelos ONNX, salidas, imagenes de ejemplo e informe/deck
-salida_sprint3/
-*.onnx
-*.onnx.data
-03. Implementacion/Sprint 3 - Evaluacion y despliegue/app/datos_demo/
-herramientas/figs_sprint3/
-herramientas/informe_sprint3.docx
-herramientas/presentacion_sprint3.pptx
-herramientas/capturas_app/

@@ -1,0 +1,180 @@
+{
+  "fecha": "2026-10-30",
+  "protocolo": "docs/PLAN_SPRINT3.md seccion 5",
+  "n_test_clasificacion": 1000,
+  "n_test_segmentacion": 860,
+  "semilla_desplegada": 2024,
+  "imagenes_con_vecino_cercano": 196,
+  "clasificacion": {
+    "por_semilla": {
+      "42": {
+        "accuracy": 0.991,
+        "recall_medio": 0.9916108280582574
+      },
+      "123": {
+        "accuracy": 0.993,
+        "recall_medio": 0.9935956718645463
+      },
+      "2024": {
+        "accuracy": 0.991,
+        "recall_medio": 0.9914599094230868
+      }
+    },
+    "accuracy_promedio": 0.9916666666666667,
+    "accuracy_desvio": 0.0011547005383792527,
+    "recall_medio_promedio": 0.9922221364486302,
+    "recall_medio_desvio": 0.0011919076149989175,
+    "desplegado": {
+      "accuracy": 0.991,
+      "recall_por_clase": {
+        "glioma": 0.9724409448818898,
+        "meningioma": 0.9967320261437909,
+        "pituitary": 0.9966666666666667,
+        "no_tumor": 1.0
+      },
+      "f1_macro": 0.9919636789926068,
+      "matriz_confusion": [
+        [
+          247,
+          7,
+          0,
+          0
+        ],
+        [
+          1,
+          305,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          299,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          140
+        ]
+      ]
+    },
+    "accuracy_por_plano": {
+      "ax": {
+        "valor": 0.9899497487437185,
+        "n": 398
+      },
+      "co": {
+        "valor": 0.9934426229508196,
+        "n": 305
+      },
+      "sa": {
+        "valor": 0.98989898989899,
+        "n": 297
+      }
+    },
+    "accuracy_por_modo": {
+      "L": {
+        "valor": 0.9914089347079038,
+        "n": 582
+      },
+      "RGB": {
+        "valor": 0.9904306220095693,
+        "n": 418
+      }
+    },
+    "accuracy_sin_vecino": 0.9888059701492538,
+    "n_sin_vecino": 804
+  },
+  "segmentacion": {
+    "por_semilla": {
+      "42": {
+        "iou": 0.7986648022568028,
+        "dice": 0.8682414320449425
+      },
+      "123": {
+        "iou": 0.7972761307315532,
+        "dice": 0.867607006185114
+      },
+      "2024": {
+        "iou": 0.8010391695641504,
+        "dice": 0.8707215737055336
+      }
+    },
+    "iou_promedio": 0.7989933675175022,
+    "iou_desvio": 0.0019029139922267816,
+    "dice_promedio": 0.8688566706451967,
+    "dice_desvio": 0.0016459105720680054,
+    "desplegado": {
+      "iou": 0.8010391695641504,
+      "dice": 0.8707215737055336,
+      "iou_por_clase": {
+        "glioma": {
+          "valor": 0.679690449773059,
+          "n": 254
+        },
+        "meningioma": {
+          "valor": 0.8980607542337156,
+          "n": 306
+        },
+        "pituitary": {
+          "valor": 0.8048190692909849,
+          "n": 300
+        }
+      },
+      "dice_por_clase": {
+        "glioma": {
+          "valor": 0.7703589067766609,
+          "n": 254
+        },
+        "meningioma": {
+          "valor": 0.9437806657911126,
+          "n": 306
+        },
+        "pituitary": {
+          "valor": 0.8811750244446885,
+          "n": 300
+        }
+      },
+      "iou_por_plano": {
+        "ax": {
+          "valor": 0.7915094093008153,
+          "n": 346
+        },
+        "co": {
+          "valor": 0.7896292490974773,
+          "n": 257
+        },
+        "sa": {
+          "valor": 0.8252790396460531,
+          "n": 257
+        }
+      },
+      "iou_por_modo": {
+        "L": {
+          "valor": 0.7887241537184235,
+          "n": 582
+        },
+        "RGB": {
+          "valor": 0.8268209653275069,
+          "n": 278
+        }
+      }
+    },
+    "iou_sin_vecino": 0.7843476471036005,
+    "n_sin_vecino": 665
+  },
+  "metas_acta": {
+    "accuracy": 0.95,
+    "recall_por_clase": 0.9,
+    "iou": 0.7
+  },
+  "cumple": {
+    "accuracy": true,
+    "recall_por_clase": true,
+    "iou": true
+  },
+  "advertencia": "196 de 1000 imagenes de prueba tienen un vecino casi identico en el entrenamiento oficial; se reportan aparte las metricas SIN esas imagenes. La prueba oficial se evaluo una sola vez (HU12). El modelo desplegado se eligio por validacion (semilla 2024), no mirando la prueba.",
+  "limitaciones": "Sin ID de paciente; solo T1 con contraste; un solo dataset; la prueba difiere moderadamente del entrenamiento; posible atajo por procedencia (R09, se reporta por plano y tipo de archivo)."
+}
