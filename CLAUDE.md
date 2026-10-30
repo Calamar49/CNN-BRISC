@@ -9,12 +9,13 @@ desplegado en una aplicación web de apoyo académico (¿para dónde?). Es una d
 - Repositorio: https://github.com/Calamar49/CNN-BRISC
 - Tablero Scrum (Trello, privado): https://trello.com/b/swXjkoyS/product-backlog-proyecto-redes-neuronales-brisc
 - Dataset: BRISC 2025 — https://www.kaggle.com/datasets/briscdataset/brisc2025/ · artículo https://arxiv.org/abs/2506.14318 · licencia CC BY 4.0 (citar a los autores)
-- **Documento de traspaso completo: `docs/TRASPASO_SPRINT2.md`** (estado, qué falta, cómo, con qué, versiones, plan de tiempo). Léelo después de este archivo.
+- **Plan vigente: `docs/PLAN_SPRINT3.md`** (Sprint 3: evaluación en la prueba, sistema web con el flujo principal de apoyo al diagnóstico, MLOps, informe, exposición y cierre). **Léelo después de este archivo.**
+- Contexto del Sprint 2 (entorno, versiones, protocolo de modelado): `docs/TRASPASO_SPRINT2.md`.
 
-## Estado (22 de octubre de 2026)
+## Estado (29 de octubre de 2026)
 - **Sprint 1 terminado** (1–8 oct, presentado el 12 oct): comprensión del negocio, comprensión de los datos y preparación de los datos. No se entrenó ningún modelo.
-- **Sprint 2 (modelado) es lo que sigue:** HU05 a HU09, presentación el 23 oct; HU10 es la presentación y HU11 (modelo multitarea) es opcional. En el repositorio **no hay código de entrenamiento todavía**.
-- Sprint 3 (24–29 oct): evaluación en la prueba oficial, app web, MLOps básico, informe y exposición. Presentación final 30 oct, margen 31 oct, **fecha límite 2 nov 2026**.
+- **Sprint 2 (modelado), parte técnica hecha** (HU05 a HU09): código, 13 entrenamientos y modelos elegidos en `03. Implementacion/Sprint 2 - Entrenamiento/`, con métricas de **validación**; la prueba oficial no se tocó. Falta su gestión (Trello, Excel, informe de estado, minuta, riesgos, retrospectiva) y subir su informe y presentación.
+- **Sprint 3 (24–29 oct) es lo que sigue:** evaluación única en la prueba oficial (HU12), sistema web (HU13), MLOps básico (HU14), informe final (HU15), exposición (HU16) y presentación final (HU17). Presentación final 30 oct, margen 31 oct, **fecha límite 2 nov 2026**. El despliegue acordado: **sistema web tipo clínica (prototipo)** con el **flujo principal de apoyo al diagnóstico completo y profesional** y los demás módulos como maqueta; datos ficticios; decir «apoyo al diagnóstico», no «diagnostica».
 
 ## Reglas que hay que respetar
 1. **No inventar datos.** Todo número debe venir de una medición del proyecto o de una fuente citada; lo propuesto por el equipo se llama «propuesta». Los resultados del artículo de BRISC son del artículo, no nuestros.
@@ -35,7 +36,8 @@ desplegado en una aplicación web de apoyo académico (¿para dónde?). Es una d
 04. Revision y retrospectiva/  Revisión del Sprint (29 diapositivas) y Retrospectiva (plantilla con campos por llenar)
 05. Lanzamiento/, 06. Cierre/  plantillas del docente sin llenar (se usan al final)
 herramientas/               generadores del informe y de las presentaciones (ver su README)
-docs/TRASPASO_SPRINT2.md    guía de trabajo para el Sprint 2
+docs/PLAN_SPRINT3.md        plan del Sprint 3 y del sistema web
+docs/TRASPASO_SPRINT2.md    guía de trabajo del Sprint 2
 ```
 
 ## Datos (en el equipo de quien trabaje, fuera de OneDrive y de Git)
@@ -61,7 +63,7 @@ Windows 11 · Python 3.13.14 · GPU NVIDIA RTX 4050 Laptop (6 GB, controlador 61
 Versiones probadas del Sprint 1 en `requirements-probado.txt`.
 
 ## Cómo trabajar con este repositorio
-- Antes de proponer algo, lee `docs/TRASPASO_SPRINT2.md` y el informe `03. Implementacion/Informe del Sprint 1.pdf`.
+- Antes de proponer algo, lee `docs/PLAN_SPRINT3.md`, `docs/TRASPASO_SPRINT2.md` y el informe `03. Implementacion/Informe del Sprint 1.pdf`.
 - Código nuevo del Sprint 2 en `03. Implementacion/Sprint 2 - Entrenamiento/`; resultados en `salida_sprint2/` (ignorada por Git).
 - Cada experimento se registra en `experimentos.csv` (columnas en el documento de traspaso). Commits en español, claros y pequeños.
 - Además del modelado, cada sprint deja evidencia de gestión (backlog del sprint, Trello, informe de estado, minuta, riesgos, presentación y retrospectiva con el equipo): ver la sección 15 de `docs/TRASPASO_SPRINT2.md`.
