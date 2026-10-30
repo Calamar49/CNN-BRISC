@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% set seccion = 'acerca' %}
+{% block titulo %}Acerca de — NeuroBRISC{% endblock %}
+{% block contenido %}
+<div class="encabezado-seccion">
+  <h1>Acerca de este prototipo</h1>
+  <p class="subtitulo">Demostración académica de un sistema de apoyo al diagnóstico en neuro-oncología.</p>
+</div>
+<section class="ficha ancha">
+  <h2>Qué es</h2>
+  <p>NeuroBRISC es un <strong>prototipo académico</strong>: el flujo de neuro-oncología (subir una resonancia T1,
+  ver la clase sugerida y el contorno del tumor, y la revisión del médico) es real; los demás módulos son maqueta.
+  <strong>No es una herramienta de diagnóstico médico</strong> y no sustituye al profesional.</p>
+  <h2>Privacidad</h2>
+  <p>Todo se procesa <strong>en local</strong>, sin enviar imágenes a ningún servicio externo. El registro de
+  monitoreo no guarda las imágenes ni datos personales. Los pacientes y los usuarios son ficticios.</p>
+  <h2>Datos y créditos (licencia CC BY 4.0)</h2>
+  <p>Las imágenes de ejemplo provienen del dataset público <strong>BRISC 2025</strong> (Brain Resonance Imaging
+  and Segmentation Collection), bajo licencia Creative Commons Attribution 4.0.</p>
+  <ul>
+    <li>Dataset: <span class="mono">kaggle.com/datasets/briscdataset/brisc2025</span></li>
+    <li>Artículo: <span class="mono">arXiv:2506.14318</span> · <span class="mono">Scientific Data</span></li>
+  </ul>
+  <h2>Modelos</h2>
+  <p>Clasificación con EfficientNetB0 y segmentación con U-Net (encoder ResNet34), entrenados con transfer
+  learning de ImageNet y servidos en ONNX sobre CPU. Versión desplegada: {{ VERSION_MODELOS }}.</p>
+</section>
+<p class="nota-pie">{{ AVISO }}</p>
+{% endblock %}

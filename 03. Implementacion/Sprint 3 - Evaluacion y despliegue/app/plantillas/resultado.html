@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% set seccion = 'casos' %}
+{% block titulo %}Resultado — NeuroBRISC{% endblock %}
+{% block contenido %}
+<p class="miga"><a href="/casos">Casos</a> / <a href="/caso/{{ paciente.id }}">{{ paciente.codigo }}</a> / Estudio {{ e.id }}</p>
+<div class="encabezado-seccion fila">
+  <div>
+    <h1>Resultado del estudio</h1>
+    <p class="subtitulo">{{ paciente.nombre }} ({{ paciente.codigo }}) · {{ e.fecha }} · modelos {{ e.version_modelos }}</p>
+  </div>
+  <a class="boton secundario" href="/informe/{{ e.id }}" target="_blank">Ver informe del caso</a>
+</div>
+
+{% if e.confianza_baja %}
+<div class="alerta">Confianza baja ({{ (e.confianza*100)|round(1) }}% &lt; {{ UMBRAL }}%): la sugerencia requiere revisión del médico.</div>
+{% endif %}
+
+<div class="resultado">
+  <section class="visor-clinico">
+    <div class="visor-caja">
+      <img src="{{ e.imagen_b64 }}" alt="Resonancia" class="visor-img">
+      {% if e.mascara_b64 %}<img src="{{ e.mascara_b64 }}" alt="Contorno del tumor" class="visor-img overlay" id="overlay">{% endif %}
+    </div>
+    {% if e.mascara_b64 %}
+    <div class="visor-controles">
+      <label><input type="checkbox" id="verMascara" checked> Contorno del tumor</label>
+      <label>Opacidad <input type="range" id="opacidad" min="0" max="100" value="65"></label>
+    </div>
+    {% else %}
+    <p class="tenue centrado">El sistema sugiere «sin tumor»: no se muestra contorno (el segmentador solo se
+    entrenó con imágenes con tumor).</p>
+    {% endif %}
+  </section>
+
+  <aside class="lectura-clinica">
+    <h2 class="rotulo">Sugerencia del sistema</h2>
+    <p class="clase-sugerida">{{ e.clase_es }}</p>
+    <p class="confianza-linea">confianza {{ (e.confianza*100)|round(1) }}%</p>
+    <ul class="probs">
+      {% for nombre, p in e.probabilidades.items() %}
+      <li class="{{ 'lider' if nombre == e.clase_es }}">
+        <span class="nom">{{ nombre }}</span>
+        <span class="barra"><span class="relleno" style="width: {{ (p*100)|round(1) }}%"></span></span>
+        <span class="val mono">{{ (p*100)|round(1) }}%</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% if not e.es_sin_tumor %}
+    <dl class="datos">
+      <div><dt>Área del tumor</dt><dd class="mono">{{ e.area_pct }}% de la imagen</dd></div>
+    </dl>
+    {% endif %}
+
+    <h2 class="rotulo sep">Revisión del médico</h2>
+    {% if e.revision_estado == 'pendiente' %}
+    <form method="post" action="/resultado/{{ e.id }}/revision" class="form-revision">
+      <div class="opciones">
+        <label><input type="radio" name="decision" value="aceptar" checked onchange="togglePlan(false)"> Acepto la sugerencia</label>
+        <label><input type="radio" name="decision" value="corregir" onchange="togglePlan(true)"> Corrijo la clase</label>
+      </div>
+      <select name="clase" id="selClase" disabled>
+        <option value="Glioma">Glioma</option><option value="Meningioma">Meningioma</option>
+        <option value="Tumor de hipofisis">Tumor de hipófisis</option><option value="Sin tumor">Sin tumor</option>
+      </select>
+      <textarea name="comentario" rows="3" placeholder="Comentario del médico (opcional)"></textarea>
+      <button type="submit" class="boton">Guardar revisión</button>
+    </form>
+    {% else %}
+    <div class="revision-hecha">
+      <p><strong>{{ e.revision_estado|capitalize }}</strong> por {{ e.revision_medico }} · {{ e.revision_fecha }}</p>
+      {% if e.revision_estado == 'corregido' %}<p>Clase corregida: <strong>{{ e.revision_clase }}</strong></p>{% endif %}
+      {% if e.revision_comentario %}<p class="tenue">«{{ e.revision_comentario }}»</p>{% endif %}
+    </div>
+    {% endif %}
+  </aside>
+</div>
+<p class="nota-pie">{{ AVISO }} La decisión final es siempre del médico.</p>
+{% endblock %}
+{% block scripts %}<script src="/estatico/app.js"></script>{% endblock %}

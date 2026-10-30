@@ -1,0 +1,20 @@
+{
+  "modelo": "clasificador_v1",
+  "tarea": "clasificacion",
+  "formato": "ONNX opset 17",
+  "archivo": "clasificador_v1.onnx",
+  "tamano_mb": 16.0,
+  "sha256": "1e10111a74bf7227f5b0986325d4381335712a812a1758ccde7fcba6615459c8",
+  "fecha_exportacion": "2026-10-30 03:42",
+  "punto_de_control": "clf_efficientnet_b0_20261023_004900.pt",
+  "semilla": "ver_experimentos",
+  "epoca_optima": 10,
+  "entrada": "float32 [lote,3,256,256] — imagen en gris repetida en 3 canales, normalizacion ImageNet",
+  "salida": "float32 [lote,4] logits (glioma, meningioma, pituitary, no_tumor)",
+  "paridad_pytorch_onnx": "dif maxima 4.10e-04, clase identica en 20 imagenes",
+  "versiones": {
+    "torch": "2.11.0+cu128",
+    "onnxruntime": "1.31.1",
+    "segmentation_models_pytorch": "0.5.0"
+  }
+}

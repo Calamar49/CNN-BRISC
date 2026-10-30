@@ -1,107 +1,108 @@
 # Sprint 3 — Evaluación y despliegue
 
-Código del Sprint 3 (HU12 a HU16): evaluación única sobre la prueba oficial, aplicación web de demostración,
-MLOps básico (registro de modelos), informe final y presentación. Contexto en `docs/TRASPASO_SPRINT2.md`
-(secciones 6.4 y 10) y `CLAUDE.md`.
+Código del Sprint 3 (HU12 a HU16), siguiendo `docs/PLAN_SPRINT3.md`: evaluación única sobre la prueba oficial,
+aplicación web de demostración (prototipo clínico), MLOps básico, informe final y presentación.
 
-> Demostración académica. **No es una herramienta de diagnóstico médico.** La prueba oficial (1.000 imágenes)
-> se evalúa **una sola vez**, aquí, y no se usa para elegir nada.
+> Demostración académica. **No es una herramienta de diagnóstico médico.** La prueba oficial (1.000 imágenes) se
+> evalúa **una sola vez**, aquí, y no se usa para elegir nada. El modelo que se despliega se eligió por
+> **validación** (semilla 2024 en ambas tareas), no mirando la prueba.
 
 ## Flujo completo
 
 ```bash
-# 0. Entorno (ademas de lo del Sprint 2): onnx, onnxruntime, fastapi, uvicorn, onnxscript
-pip install onnx onnxruntime onnxscript fastapi "uvicorn[standard]" python-multipart
+# Entorno (ademas de lo del Sprint 2): onnx, onnxruntime, onnxscript, fastapi, uvicorn, jinja2, python-multipart
+pip install -r ../../requirements-sprint2.txt
+pip install onnx onnxruntime onnxscript fastapi "uvicorn[standard]" jinja2 python-multipart
 
-# 1. Reentrenar la configuracion elegida sobre train+val (epocas fijadas en validacion)
-python reentrenar_final.py --tarea clasificacion   # EfficientNetB0 batch=64, 10 epocas
-python reentrenar_final.py --tarea segmentacion    # U-Net lr=1e-4, 26 epocas
+# 1. HU12 — evaluacion UNICA sobre la prueba oficial (6 checkpoints del Sprint 2, promedio +- desvio)
+python evaluar_prueba_final.py
 
-# 2. Exportar a ONNX (verifica la paridad PyTorch vs ONNX en imagenes reales)
+# 2. Exportar a ONNX los modelos DESPLEGADOS (semilla 2024) y verificar la paridad
 python exportar_onnx.py
 
-# 3. HU12: evaluacion UNICA sobre la prueba oficial
-python evaluar_prueba.py                           # escribe salida_sprint3/evaluacion_prueba.json y figuras
+# 3. HU14 — registro de modelos y metricas (SHA-256, versiones, version del dataset, commit)
+python registrar_modelos.py
 
-# 4. HU14: registro de modelos y metricas
-python registrar_modelos.py                        # escribe registro_modelos.json (si se sube a Git)
+# 4. Pruebas minimas (paridad, preprocesamiento identico, recorrido de inferencia)
+python pruebas.py
 
-# 5. HU13: aplicacion web de demostracion
-python -m uvicorn app.servidor:app --port 8000     # abrir http://localhost:8000
+# 5. HU13 — aplicacion web de demostracion (prototipo clinico)
+python -m uvicorn app.servidor:app --port 8000      # o: iniciar_demo.bat   (Windows)
+# abrir http://localhost:8000   (medico / medico123)
 ```
 
-## Por qué se reentrena antes de evaluar (HU12)
+## HU12 — evaluación única sobre la prueba oficial
 
-En los Sprints 1 y 2 la partición fue 3.999 entrenamiento / 1.001 validación / 1.000 prueba. La validación sirvió
-para **elegir** arquitectura, hiperparámetros y época; la prueba no se tocó. Para el modelo final que se evalúa y
-se despliega, se reentrena la configuración elegida sobre **entrenamiento + validación (5.000 imágenes de
-clasificación; 3.933 con máscara)**, con el número de épocas **fijado de antemano** en validación (sin parada
-temprana, porque ya no queda validación para vigilar):
+Protocolo del plan (sección 5): se evalúan los **6 puntos de control del Sprint 2** (3 semillas × 2 tareas) sobre
+la prueba oficial y se reporta **promedio ± desvío (muestral)**. El modelo **desplegado** es el mejor por
+validación de cada tarea (**semilla 2024**); los desgloses, la matriz de confusión y el análisis de errores se
+hacen con ese modelo. La prueba se evaluó una sola vez y no se cambió nada después de ver los números.
 
-- Clasificador EfficientNetB0 (batch=64, lr=3e-4): épocas óptimas en validación 6/14/10 → se fija **10**.
-- U-Net ResNet34 (lr=1e-4): épocas óptimas 28/25/24 → se fija **26**.
+| Tarea | Métrica | Validación (Sprint 2, 3 semillas) | Prueba oficial — desplegado (2024) | Prueba — promedio 3 semillas | Meta |
+|---|---|---|---|---|---|
+| Clasificación | accuracy | — | **99.10 %** | 99.17 % ± 0.12 % | ≥ 95 % ✓ |
+| Clasificación | recall medio | 99.57 % ± 0.15 % | 99.34 % | — | — |
+| Clasificación | recall mín. por clase | — | **97.24 % (glioma)** | — | ≥ 90 % ✓ |
+| Segmentación | IoU | 80.12 % ± 0.33 % | **80.10 %** | 79.90 % ± 0.19 % | ≥ 70 % ✓ |
+| Segmentación | Dice | — | 87.07 % | — | — |
 
-**Advertencia honesta:** el Sprint 1 encontró que 113–123 de las 1.000 imágenes de prueba tienen un vecino casi
-idéntico en el entrenamiento oficial. Como el modelo final se reentrena con train+val, la cifra de prueba puede
-estar algo inflada; se reporta junto al resultado.
+Las tres metas del acta **se cumplen** en la prueba oficial. El desempeño en prueba ≈ validación (no hay colapso
+por sobreajuste). Desgloses (riesgo R09): accuracy por tipo de archivo gris/RGB 99.14 % / 99.04 %; IoU gris/RGB
+78.87 % / 82.68 %. IoU por clase: glioma 67.97 % (la más difícil), meningioma 89.81 %, hipófisis 80.48 %.
 
-## La aplicación web (HU13)
+**Subconjunto sin vecino cercano (fuga):** 196 de las 1.000 imágenes de prueba tienen un vecino casi idéntico en
+el entrenamiento oficial (correlación de miniaturas 32×32 ≥ 0.98; lista en `test_con_vecino_cercano.csv`).
+Quitándolas, las métricas bajan poco: accuracy 98.88 % (n=804) e IoU 78.43 % (n=665) — el efecto de la fuga es
+pequeño. El análisis de errores (aciertos y errores, 2 mejores y 2 peores por IoU) está en
+`salida_sprint3/prueba_ejemplos_*.png`.
 
-`app/servidor.py` (FastAPI) sirve los modelos ONNX con onnxruntime; `app/estatico/` es la interfaz (HTML/CSS/JS
-vanilla, sin framework). Se sube una resonancia y el sistema predice el tipo de tumor y marca su contorno. El
-diseño es un **visor de radiología**: imagen en gris sobre fondo oscuro, máscara de tumor como overlay coral,
-lecturas en tipografía monoespaciada. Trae ejemplos reales de la prueba oficial para probar sin subir nada.
+**Nota:** como alternativa documentada (el usuario lo pidió), `reentrenar_final.py` reentrena la configuración
+elegida sobre train+val con las épocas fijadas en validación; da 99.30 % / IoU 80.45 % en la prueba. El plan
+marca ese reentreno como opcional (P3) y se queda como alternativa; lo desplegado es la semilla 2024.
 
-Elección de arquitectura (riesgo R05, tamaño del modelo en el navegador): se optó por un **backend local** con
-onnxruntime en vez de correr los modelos en el navegador, porque la U-Net pesa ~98 MB en ONNX y descargarla en el
-cliente sería lento y frágil. El backend sirve el modelo y el navegador solo recibe la imagen y los resultados.
+## HU13 — aplicación web (prototipo clínico)
 
-## MLOps básico (HU14)
+`app/` es un prototipo de **sistema clínico** con el flujo principal real de **apoyo al diagnóstico en
+neuro-oncología** (inicio de sesión → casos → subir una T1 → resultado con clase, probabilidades y contorno →
+revisión del médico → informe del caso) y los demás módulos como maqueta. FastAPI + Jinja2 + SQLite; inferencia
+con ONNX Runtime en **CPU**; **funciona sin internet** (fuentes del sistema, nada de CDN); diseño blanco y formal.
+Detalle en `app/README.md`. Decisión de arquitectura (riesgo R05): backend local en vez de modelo en el navegador,
+porque la U-Net pesa ~98 MB en ONNX.
 
-`modelos/` es el registro de modelos: cada modelo final en ONNX (`*.onnx`) con su **tarjeta de modelo**
-(`*_tarjeta.json`: formato, tamaño, forma de entrada/salida, paridad PyTorch↔ONNX, procedencia del entrenamiento).
-`registro_modelos.json` (en la raíz de esta carpeta) reúne, versionado y con el commit de Git, la procedencia,
-la métrica de validación del Sprint 2 y la métrica en la prueba oficial del Sprint 3 de cada modelo.
+## HU14 — MLOps básico
 
-Los pesos (`*.pt`), los modelos (`*.onnx`) y las salidas pesadas **no se suben a Git** (ver `.gitignore`): se
-regeneran con los scripts. Lo versionado es el código, las tarjetas de modelo y el registro de métricas.
+- `modelos/`: modelos desplegados en ONNX (`clasificador_v1.onnx`, `segmentacion_v1.onnx`) con su **tarjeta de
+  modelo** (`*_tarjeta.json`: formato, tamaño, **SHA-256**, paridad, procedencia, versiones de torch/onnxruntime/smp).
+- `registro_modelos.json` (se sube a Git): procedencia, SHA-256, métricas de validación y de prueba, **versión del
+  dataset** (SHA-256 del manifest + semilla 42) y **commit de Git** de cada modelo.
+- **Etiquetas de Git** (versión identificable): `datos-v1.0`, `modelo-clasificador-v1.0`,
+  `modelo-segmentacion-v1.0`, `app-v1.0`.
+- **Monitoreo** en la propia app (`/admin`): registra cada predicción (clase, probabilidades, confianza, área,
+  tiempo, brillo medio, alerta) **sin guardar imágenes ni datos personales**; compara el brillo medio con el de
+  entrenamiento como señal simple de deriva.
 
-## Informe y presentación (HU15, HU16)
-
-Generados con datos e imágenes reales de este Sprint (ver `herramientas/README.md`):
-- `herramientas/informe_sprint3.docx` — informe final (30 encabezados, 18 tablas, 9 imágenes): evaluación en la
-  prueba oficial, la aplicación web con capturas reales, MLOps, limitaciones y glosario.
-- `herramientas/presentacion_sprint3.pptx` — 15 diapositivas para la Revisión del Sprint 3.
-- `herramientas/gen_figs_sprint3.py` genera las figuras de evaluación (de `salida_sprint3/evaluacion_prueba.json`)
-  y reúne las capturas de la app. Las **capturas de la aplicación** (`herramientas/capturas_app/app_*.jpg`) se toman
-  a mano del visor en funcionamiento (levantar la app, abrir un ejemplo, capturar); no se regeneran por script y no
-  se suben a Git. El informe y el deck sí se regeneran con sus scripts una vez que esas imágenes existen.
-
-## Resultado en la prueba oficial (HU12, evaluado una sola vez)
-
-| Tarea | Métrica | Validación (Sprint 2) | Prueba oficial (HU12) | Meta del acta |
-|---|---|---|---|---|
-| Clasificación | accuracy | — | 99.30 % | ≥ 95 % |
-| Clasificación | recall medio | 99.57 % ± 0.12 % | 99.34 % | ≥ 90 % por clase |
-| Clasificación | recall mínimo por clase | — | 98.03 % (glioma) | ≥ 90 % |
-| Segmentación | IoU | 80.12 % ± 0.27 % | 80.45 % | ≥ 70 % |
-| Segmentación | Dice | — | 87.34 % | — |
-
-Las tres metas del acta se superan en la prueba oficial. El desempeño en prueba ≈ validación (no hay colapso por
-sobreajuste). Se reporta la advertencia de las 113–123 imágenes de prueba con vecino casi idéntico en entrenamiento.
+Los pesos (`.pt`), los modelos (`.onnx`), la base de datos de demostración y las salidas **no se suben a Git** (ver
+`.gitignore`): se regeneran con los scripts.
 
 ## Estructura
 
 ```
 preprocesado.py            Preprocesado canonico (gris -> cuadrado -> 256 -> ImageNet), compartido por todo
-reentrenar_final.py        Reentrena la config elegida sobre train+val, epocas fijas (modelo final)
-exportar_onnx.py           Exporta los .pt finales a ONNX y verifica la paridad en imagenes reales
-evaluar_prueba.py          HU12: evaluacion unica sobre la prueba oficial (metricas, figuras, CSV por imagen)
+evaluar_prueba_final.py    HU12: evalua los 6 checkpoints en la prueba (promedio+-desvio), subconjunto sin vecino,
+                           analisis de errores; modelo desplegado = semilla 2024
+reentrenar_final.py        Alternativa (opcional, P3): reentrena la config elegida sobre train+val
+exportar_onnx.py           Exporta a ONNX los modelos desplegados (semilla 2024) y verifica la paridad; SHA-256
 registrar_modelos.py       HU14: registro de modelos y metricas versionado (registro_modelos.json)
+pruebas.py                 Pruebas minimas (paridad, preprocesamiento identico, recorrido de inferencia)
 registro_modelos.json      Registro (se sube a Git; sin pesos)
-modelos/                   Registro de artefactos: *.onnx + *_tarjeta.json (ONNX ignorado por Git)
-app/
-  servidor.py              Backend FastAPI (onnxruntime)
-  estatico/                Interfaz web (index.html, estilos.css, app.js) + ejemplos/ (ignorado por Git)
-salida_sprint3/            Checkpoints finales, metricas de prueba y figuras (ignorado por Git)
+modelos/                   Artefactos: *.onnx + *_tarjeta.json (ONNX ignorado por Git)
+app/                       Aplicacion web (servidor FastAPI, plantillas, estatico, datos_demo); ver app/README.md
+iniciar_demo.bat           Script de inicio en Windows
+salida_sprint3/            Resultados de la evaluacion, figuras y CSV por imagen (ignorado por Git)
 ```
+
+## Informe y presentación (HU15, HU16)
+
+En `herramientas/`: `gen_figs_sprint3.py` (figuras reales de la evaluación + capturas de la app),
+`build_informe_sprint3.py` → `informe_sprint3.docx` y `build_slides_sprint3.py` → `presentacion_sprint3.pptx`.
+Las capturas de la app (`herramientas/capturas_app/`) se toman del sistema en funcionamiento.

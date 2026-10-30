@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% set seccion = 'casos' %}
+{% block titulo %}Informe del caso {{ e.id }} — NeuroBRISC{% endblock %}
+{% block contenido %}
+<div class="informe-acciones no-imprimir">
+  <a class="boton secundario" href="/resultado/{{ e.id }}">Volver al resultado</a>
+  <button class="boton" onclick="window.print()">Imprimir / guardar PDF</button>
+</div>
+
+<article class="informe-caso">
+  <header class="informe-cab">
+    <div>
+      <h1>Informe de apoyo al diagnóstico</h1>
+      <p class="tenue">Módulo de neuro-oncología · NeuroBRISC (prototipo)</p>
+    </div>
+    <div class="informe-sello">
+      <p class="mono">Estudio #{{ e.id }}</p>
+      <p class="mono">{{ e.fecha }}</p>
+    </div>
+  </header>
+
+  <section class="informe-bloque">
+    <h2>Paciente (ficticio)</h2>
+    <table class="tabla-informe">
+      <tr><th>Código</th><td class="mono">{{ paciente.codigo }}</td><th>Edad</th><td>{{ paciente.edad }}</td></tr>
+      <tr><th>Nombre</th><td>{{ paciente.nombre }}</td><th>Sexo</th><td>{{ paciente.sexo }}</td></tr>
+      <tr><th>Motivo</th><td colspan="3">{{ paciente.notas }}</td></tr>
+    </table>
+  </section>
+
+  <section class="informe-bloque">
+    <h2>Resultado del sistema (apoyo al diagnóstico)</h2>
+    <div class="informe-resultado">
+      <div class="informe-imagen">
+        <img src="{{ e.imagen_b64 }}" alt="Resonancia">
+        {% if e.mascara_b64 %}<img src="{{ e.mascara_b64 }}" alt="Contorno" class="overlay-fijo">{% endif %}
+      </div>
+      <table class="tabla-informe">
+        <tr><th>Tipo de tumor sugerido</th><td><strong>{{ e.clase_es }}</strong></td></tr>
+        <tr><th>Confianza</th><td class="mono">{{ (e.confianza*100)|round(1) }}%{% if e.confianza_baja %} — confianza baja, requiere revisión{% endif %}</td></tr>
+        {% for nombre, p in e.probabilidades.items() %}
+        <tr><th>P({{ nombre }})</th><td class="mono">{{ (p*100)|round(1) }}%</td></tr>
+        {% endfor %}
+        {% if not e.es_sin_tumor %}<tr><th>Área del tumor</th><td class="mono">{{ e.area_pct }}% de la imagen</td></tr>{% endif %}
+        <tr><th>Versión de los modelos</th><td class="mono">{{ e.version_modelos }}</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="informe-bloque">
+    <h2>Revisión del médico</h2>
+    {% if e.revision_estado == 'pendiente' %}
+    <p class="tenue">Pendiente de revisión.</p>
+    {% else %}
+    <table class="tabla-informe">
+      <tr><th>Estado</th><td>{{ e.revision_estado|capitalize }}</td></tr>
+      {% if e.revision_estado == 'corregido' %}<tr><th>Clase corregida por el médico</th><td><strong>{{ e.revision_clase }}</strong></td></tr>{% endif %}
+      <tr><th>Médico</th><td>{{ e.revision_medico }}</td></tr>
+      <tr><th>Fecha de revisión</th><td class="mono">{{ e.revision_fecha }}</td></tr>
+      {% if e.revision_comentario %}<tr><th>Comentario</th><td>{{ e.revision_comentario }}</td></tr>{% endif %}
+    </table>
+    {% endif %}
+  </section>
+
+  <footer class="informe-pie">
+    <p><strong>{{ AVISO }}</strong></p>
+    <p class="tenue">Procesado en local con ONNX Runtime. No se enviaron imágenes a servicios externos. Paciente
+    ficticio; no corresponde a una persona real. Imágenes de ejemplo del dataset BRISC 2025 (CC BY 4.0).</p>
+  </footer>
+</article>
+{% endblock %}

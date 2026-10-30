@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titulo %}Sistema clínico — demostración{% endblock %}</title>
+<link rel="stylesheet" href="/estatico/estilos.css">
+</head>
+<body>
+{% if usuario %}
+<div class="disposicion">
+  <aside class="lateral">
+    <div class="logo">
+      <span class="logo-marca">NeuroBRISC</span>
+      <span class="logo-sub">Prototipo clínico</span>
+    </div>
+    <nav>
+      <p class="nav-grupo">Neuro-oncología</p>
+      <a href="/casos" class="{{ 'activo' if seccion == 'casos' }}">Casos y estudios</a>
+      <a href="/ficha-modelo" class="{{ 'activo' if seccion == 'ficha' }}">Ficha del modelo</a>
+      {% if usuario.rol == 'admin' %}<a href="/admin" class="{{ 'activo' if seccion == 'admin' }}">Monitoreo</a>{% endif %}
+      <p class="nav-grupo">Otros módulos <span class="maqueta-nota">maqueta</span></p>
+      {% for clave, nombre in MODULOS.items() %}
+      <a href="/modulo/{{ clave }}" class="tenue {{ 'activo' if seccion == 'modulo-' ~ clave }}">{{ nombre }}</a>
+      {% endfor %}
+      <p class="nav-grupo">Sistema</p>
+      <a href="/acerca" class="tenue {{ 'activo' if seccion == 'acerca' }}">Acerca de / créditos</a>
+    </nav>
+  </aside>
+
+  <div class="principal">
+    <header class="barra">
+      <p class="aviso">{{ AVISO }}</p>
+      <div class="sesion">
+        <span>{{ usuario.nombre }}</span>
+        <a href="/salir" class="salir">Cerrar sesión</a>
+      </div>
+    </header>
+    <main class="contenido">
+      {% block contenido %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% else %}
+  {% block sin_sesion %}{% endblock %}
+{% endif %}
+{% block scripts %}{% endblock %}
+</body>
+</html>

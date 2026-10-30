@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% set seccion = 'casos' %}
+{% block titulo %}Nuevo estudio — NeuroBRISC{% endblock %}
+{% block contenido %}
+<p class="miga"><a href="/casos">Casos</a> / <a href="/caso/{{ paciente.id }}">{{ paciente.codigo }}</a> / Nuevo estudio</p>
+<div class="encabezado-seccion">
+  <h1>Nuevo estudio de neuro-oncología</h1>
+  <p class="subtitulo">Paciente {{ paciente.nombre }} ({{ paciente.codigo }}). Sube una resonancia T1 con contraste.
+  El modelo solo conoce ese tipo de imagen.</p>
+</div>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+<form method="post" action="/caso/{{ paciente.id }}/estudio" enctype="multipart/form-data" id="formEstudio">
+  <div class="subir">
+    <label class="archivo">
+      <input type="file" name="archivo" accept="image/png,image/jpeg" id="entradaArchivo">
+      <span class="archivo-texto">Seleccionar un archivo PNG o JPG</span>
+    </label>
+    <p class="o-bien">o elige una imagen de ejemplo (de validación):</p>
+    <div class="galeria">
+      {% for ej in ejemplos %}
+      <button type="submit" name="ejemplo" value="{{ ej }}" class="ejemplo" title="{{ ej }}">
+        <img src="/demo-imagen/{{ ej }}" alt="">
+        <span>{{ ej.split('_')[1].replace('.png','') }}</span>
+      </button>
+      {% endfor %}
+    </div>
+    <button type="submit" class="boton" id="botonAnalizar">Analizar imagen</button>
+    <div class="procesando" id="procesando" hidden>Procesando la resonancia en el servidor…</div>
+  </div>
+</form>
+<p class="nota-pie">La inferencia se ejecuta en el servidor local con ONNX Runtime (CPU); no se envía la imagen a
+ningún servicio externo. La imagen del estudio se guarda en la base de datos de demostración; el registro de
+monitoreo no guarda imágenes ni datos personales.</p>
+{% endblock %}
+{% block scripts %}<script src="/estatico/app.js"></script>{% endblock %}

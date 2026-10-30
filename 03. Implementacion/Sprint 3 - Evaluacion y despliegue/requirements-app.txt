@@ -1,0 +1,11 @@
+anyio==4.15.1
+click==8.5.0
+fastapi==0.162.0
+Jinja2==3.1.6
+numpy==2.5.1
+onnxruntime==1.31.1
+pandas==3.0.5
+pillow==12.3.0
+python-multipart==0.0.32
+starlette==1.10.0
+uvicorn==0.54.0

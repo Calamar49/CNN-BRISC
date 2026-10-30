@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% set seccion = 'admin' %}
+{% block titulo %}Monitoreo — NeuroBRISC{% endblock %}
+{% block contenido %}
+<div class="encabezado-seccion">
+  <h1>Monitoreo del modelo</h1>
+  <p class="subtitulo">Registro de predicciones del prototipo. No se guardan imágenes ni datos personales: solo
+  métricas de cada inferencia.</p>
+</div>
+
+{% if m.total == 0 %}
+<div class="vacio-caja"><p>Todavía no hay predicciones registradas. Realiza un estudio para ver el monitoreo.</p></div>
+{% else %}
+<div class="indicadores">
+  <div class="indicador"><span class="val-grande">{{ m.total }}</span><span class="etq">predicciones</span></div>
+  <div class="indicador"><span class="val-grande">{{ m.confianza_media }}%</span><span class="etq">confianza media</span></div>
+  <div class="indicador"><span class="val-grande">{{ m.pct_alertas }}%</span><span class="etq">con alerta de confianza baja</span></div>
+  <div class="indicador"><span class="val-grande">{{ m.tiempo_p95_ms }} ms</span><span class="etq">tiempo p95</span></div>
+  <div class="indicador"><span class="val-grande">{{ m.brillo_medio }}</span><span class="etq">brillo medio de entrada</span></div>
+</div>
+
+<div class="dos-columnas">
+  <section>
+    <h2 class="rotulo">Distribución de clases predichas</h2>
+    <table class="tabla">
+      <thead><tr><th>Clase</th><th>Predicciones</th></tr></thead>
+      <tbody>{% for clase, n in m.por_clase.items() %}<tr><td>{{ clase }}</td><td class="mono">{{ n }}</td></tr>{% endfor %}</tbody>
+    </table>
+    <p class="nota-pie">El brillo medio de las entradas se compara con el del entrenamiento (~36–161) como señal
+    simple de deriva.</p>
+  </section>
+  <section>
+    <h2 class="rotulo">Últimas predicciones</h2>
+    <table class="tabla compacta">
+      <thead><tr><th>Fecha</th><th>Clase</th><th>Conf.</th><th>ms</th></tr></thead>
+      <tbody>
+      {% for p in m.ultimas %}
+      <tr><td class="mono">{{ p.fecha }}</td><td>{{ p.clase }}</td>
+      <td class="mono">{{ (p.confianza*100)|round(0)|int }}%{% if p.confianza_baja %} !{% endif %}</td>
+      <td class="mono">{{ p.tiempo_ms|round(0)|int }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,82 +1,90 @@
 {
   "proyecto": "BRISC 2025 — clasificacion y segmentacion de tumores cerebrales",
-  "generado": "2026-10-30 03:07",
-  "commit_git": "8f610ce",
-  "nota": "Demostracion academica, no herramienta de diagnostico. Los pesos (.pt) y los modelos (.onnx) no se versionan en Git; se regeneran con reentrenar_final.py + exportar_onnx.py. La prueba oficial se evaluo una sola vez (HU12).",
+  "generado": "2026-10-30 03:55",
+  "commit_git": "7e19df8",
+  "nota": "Demostracion academica, no herramienta de diagnostico. Modelos desplegados = mejores por validacion del Sprint 2 (semilla 2024). Los pesos (.pt) y los .onnx no se versionan en Git; se regeneran con exportar_onnx.py. La prueba oficial se evaluo una sola vez (HU12). Monitoreo en la app (/admin).",
+  "dataset": {
+    "nombre": "BRISC 2025 preparado",
+    "semilla_particion": 42,
+    "particion": "3999 train / 1001 val / 1000 test",
+    "sha256_manifest": "1a328ec2ee150fb20375252d28cd9320658f0f3c8ed4bd2660b5e5f49255a95f"
+  },
   "modelos": [
     {
-      "nombre": "clasificador_final",
+      "nombre": "clasificador",
       "tarea": "clasificacion",
-      "arquitectura": "EfficientNetB0 (transfer learning ImageNet)",
-      "entrenamiento": {
-        "nombre": "clasificador_final",
-        "tarea": "clasificacion",
-        "fecha": "2026-10-30",
-        "datos": "train+val (entrenamiento + validacion del Sprint 1)",
-        "epocas": 10,
-        "lr": 0.0003,
-        "batch": 64,
-        "semilla": 42,
-        "optimizador": "AdamW",
-        "arquitectura": "efficientnet_b0",
-        "encoder": null
-      },
+      "arquitectura": "float32 [lote,4] logits (glioma, meningioma, pituitary, no_tumor)",
       "artefacto": {
-        "archivo": "clasificador_final.onnx",
+        "archivo": "clasificador_v1.onnx",
         "formato": "ONNX opset 17",
         "tamano_mb": 16.0,
-        "paridad_pytorch_onnx": "diferencia maxima 4.14e-04"
+        "sha256": "1e10111a74bf7227f5b0986325d4381335712a812a1758ccde7fcba6615459c8",
+        "punto_de_control": "clf_efficientnet_b0_20261023_004900.pt",
+        "paridad_pytorch_onnx": "dif maxima 4.10e-04, clase identica en 20 imagenes"
       },
-      "validacion_sprint2": "99.57% ± 0.12% (3 semillas, Sprint 2)",
+      "versiones": {
+        "torch": "2.11.0+cu128",
+        "onnxruntime": "1.31.1",
+        "segmentation_models_pytorch": "0.5.0"
+      },
+      "validacion_sprint2": "recall medio 99.57% ± 0.15% (3 semillas)",
       "prueba_oficial_hu12": {
-        "accuracy": 99.3,
+        "accuracy": 99.1,
         "recall_por_clase": {
-          "glioma": 98.03,
-          "meningioma": 99.35,
-          "pituitary": 100.0,
+          "glioma": 97.24,
+          "meningioma": 99.67,
+          "pituitary": 99.67,
           "no_tumor": 100.0
         },
-        "f1_macro": 99.38
-      }
+        "promedio_3_semillas": "accuracy 99.17% ± 0.12%"
+      },
+      "etiqueta_git": "modelo-clasificador-v1.0"
     },
     {
-      "nombre": "unet_final",
+      "nombre": "segmentacion",
       "tarea": "segmentacion",
-      "arquitectura": "U-Net con encoder ResNet34 (transfer learning ImageNet)",
-      "entrenamiento": {
-        "nombre": "unet_final",
-        "tarea": "segmentacion",
-        "fecha": "2026-10-30",
-        "datos": "train+val (entrenamiento + validacion del Sprint 1, solo con mascara)",
-        "epocas": 26,
-        "lr": 0.0001,
-        "batch": 8,
-        "semilla": 42,
-        "optimizador": "AdamW",
-        "arquitectura": "unet_resnet34",
-        "encoder": "resnet34"
-      },
+      "arquitectura": "float32 [lote,1,256,256] logits (sigmoide, umbral 0.5)",
       "artefacto": {
-        "archivo": "unet_final.onnx",
+        "archivo": "segmentacion_v1.onnx",
         "formato": "ONNX opset 17",
         "tamano_mb": 97.7,
-        "paridad_pytorch_onnx": "diferencia maxima 3.45e-04"
+        "sha256": "871540c1f936e7784f96fde8b0eebd8c47891144095a64cc846c95b3d5cec010",
+        "punto_de_control": "unet_resnet34_20261023_005828.pt",
+        "paridad_pytorch_onnx": "dif maxima 2.77e-04, mascara coincide en 100.000% de pixeles"
       },
-      "validacion_sprint2": "80.12% ± 0.27% (3 semillas, Sprint 2)",
+      "versiones": {
+        "torch": "2.11.0+cu128",
+        "onnxruntime": "1.31.1",
+        "segmentation_models_pytorch": "0.5.0"
+      },
+      "validacion_sprint2": "IoU 80.12% ± 0.33% (3 semillas)",
       "prueba_oficial_hu12": {
-        "iou": 80.45,
-        "dice": 87.34,
+        "iou": 80.1,
+        "dice": 87.07,
         "iou_por_clase": {
-          "glioma": 68.56,
-          "meningioma": 89.8,
-          "pituitary": 80.98
-        }
-      }
+          "glioma": 67.97,
+          "meningioma": 89.81,
+          "pituitary": 80.48
+        },
+        "promedio_3_semillas": "IoU 79.9% ± 0.19%"
+      },
+      "etiqueta_git": "modelo-segmentacion-v1.0"
     }
   ],
   "metas_acta": {
     "accuracy": ">= 95%",
     "recall_por_clase": ">= 90%",
     "iou": ">= 70%"
-  }
+  },
+  "cumple_metas": {
+    "accuracy": true,
+    "recall_por_clase": true,
+    "iou": true
+  },
+  "etiquetas_git": [
+    "datos-v1.0",
+    "modelo-clasificador-v1.0",
+    "modelo-segmentacion-v1.0",
+    "app-v1.0"
+  ]
 }

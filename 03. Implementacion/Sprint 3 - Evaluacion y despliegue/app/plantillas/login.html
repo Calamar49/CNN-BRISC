@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block titulo %}Ingreso — NeuroBRISC{% endblock %}
+{% block sin_sesion %}
+<div class="login-pantalla">
+  <form class="login-tarjeta" method="post" action="/login">
+    <div class="login-marca">
+      <span class="logo-marca">NeuroBRISC</span>
+      <span class="logo-sub">Prototipo clínico · módulo de neuro-oncología</span>
+    </div>
+    <p class="login-intro">Sistema de apoyo a la lectura de resonancias T1 con contraste. Clasifica el tipo de
+    tumor y marca su contorno para que el médico lo revise.</p>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    <label>Usuario <input type="text" name="usuario" value="medico" autocomplete="username" required></label>
+    <label>Clave <input type="password" name="clave" value="medico123" autocomplete="current-password" required></label>
+    <button type="submit">Ingresar</button>
+    <p class="login-demo">Acceso de demostración — médico: <code>medico / medico123</code> · administrador:
+    <code>admin / admin123</code>. Usuarios y datos ficticios.</p>
+    <p class="aviso-login">{{ AVISO }}</p>
+  </form>
+</div>
+{% endblock %}

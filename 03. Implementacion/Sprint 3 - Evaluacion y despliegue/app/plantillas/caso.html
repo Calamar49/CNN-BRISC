@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% set seccion = 'casos' %}
+{% block titulo %}{{ paciente.codigo }} — NeuroBRISC{% endblock %}
+{% block contenido %}
+<p class="miga"><a href="/casos">Casos</a> / {{ paciente.codigo }}</p>
+<div class="encabezado-seccion fila">
+  <div>
+    <h1>{{ paciente.nombre }}</h1>
+    <p class="subtitulo">{{ paciente.codigo }} · {{ paciente.edad }} años · {{ paciente.sexo }} · <span class="tenue">{{ paciente.notas }}</span></p>
+  </div>
+  <a class="boton" href="/caso/{{ paciente.id }}/estudio">Nuevo estudio de neuro-oncología</a>
+</div>
+
+{% if estudios %}
+<table class="tabla">
+  <thead><tr><th>Fecha</th><th>Archivo</th><th>Sugerencia del sistema</th><th>Confianza</th><th>Área</th><th>Revisión</th></tr></thead>
+  <tbody>
+  {% for e in estudios %}
+    <tr onclick="location='/resultado/{{ e.id }}'">
+      <td class="mono">{{ e.fecha }}</td>
+      <td class="tenue">{{ e.archivo_nombre }}</td>
+      <td>{{ e.clase_es }}{% if e.confianza_baja %} <span class="aviso-baja">confianza baja</span>{% endif %}</td>
+      <td class="mono">{{ (e.confianza * 100) | round(1) }}%</td>
+      <td class="mono">{% if e.es_sin_tumor %}—{% else %}{{ e.area_pct }}%{% endif %}</td>
+      <td>{% if e.revision_estado == 'pendiente' %}<span class="tenue">pendiente</span>{% else %}{{ e.revision_estado }}{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="vacio-caja">
+  <p>Este paciente no tiene estudios todavía.</p>
+  <a class="boton" href="/caso/{{ paciente.id }}/estudio">Iniciar el primer estudio</a>
+</div>
+{% endif %}
+{% endblock %}

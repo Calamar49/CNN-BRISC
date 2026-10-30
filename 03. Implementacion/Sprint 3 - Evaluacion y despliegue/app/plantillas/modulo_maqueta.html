@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% set seccion = 'modulo-' ~ clave %}
+{% block titulo %}{{ titulo }} — NeuroBRISC{% endblock %}
+{% block contenido %}
+<div class="encabezado-seccion">
+  <h1>{{ titulo }}</h1>
+  <p class="subtitulo">Módulo de maqueta. En este prototipo solo el flujo de neuro-oncología está implementado.</p>
+</div>
+<div class="maqueta-aviso">
+  <p><strong>Maqueta, no implementado.</strong> Esta pantalla muestra cómo se vería el módulo dentro del sistema
+  clínico, pero no tiene funciones reales. El alcance del prototipo es el flujo de apoyo al diagnóstico en
+  neuro-oncología (menú «Casos y estudios»).</p>
+</div>
+<div class="maqueta-rejilla">
+  {% for i in range(6) %}
+  <div class="maqueta-ficha"><span class="barra-fantasma"></span><span class="barra-fantasma corta"></span></div>
+  {% endfor %}
+</div>
+{% endblock %}

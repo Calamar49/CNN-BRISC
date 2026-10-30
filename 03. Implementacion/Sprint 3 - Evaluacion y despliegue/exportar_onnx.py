@@ -1,20 +1,20 @@
-"""Exporta los modelos finales reentrenados (salida_sprint3/*.pt) a ONNX, en la carpeta registro de modelos
-(modelos/), y verifica que la salida de ONNX coincide con la de PyTorch (paridad numerica). HU13/HU14.
+"""Exporta a ONNX los modelos que se DESPLIEGAN (los mejores por validacion del Sprint 2: semilla 2024 en ambas
+tareas, segun docs/PLAN_SPRINT3.md seccion 5) y verifica la paridad PyTorch<->ONNX en imagenes reales de
+validacion. Genera la tarjeta de modelo con SHA-256 y versiones (para el registro de modelos, HU14).
 
-ONNX permite servir el modelo sin PyTorch (la aplicacion web usa onnxruntime, mas liviano) y deja el modelo en
-un formato estandar y versionado para el registro de modelos (MLOps basico, HU14).
+ONNX permite servir el modelo sin PyTorch (la app usa onnxruntime en CPU) y deja el modelo versionado.
 
 Uso:
-    python exportar_onnx.py          # exporta clasificador y U-Net
-    python exportar_onnx.py --tarea clasificacion
+    python exportar_onnx.py                 # exporta clasificador_v1.onnx y segmentacion_v1.onnx (semilla 2024)
+    python exportar_onnx.py --reentrenado   # alternativa: exporta los modelos reentrenados sobre train+val
 """
 import argparse
+import hashlib
 import json
+import os
 import sys
 from datetime import datetime
 from pathlib import Path
-
-import os
 
 import numpy as np
 import onnxruntime as ort
@@ -24,94 +24,109 @@ from PIL import Image
 
 AQUI = Path(__file__).resolve().parent
 S2 = AQUI.parent / "Sprint 2 - Entrenamiento"
-sys.path.insert(0, str(S2))
+sys.path.insert(0, str(S2)); sys.path.insert(0, str(AQUI))
 from modelos import crear_clasificador, crear_unet  # noqa: E402
+from preprocesado import preprocesar  # noqa: E402
 
-SALIDA = AQUI / "salida_sprint3"
+SAL2 = S2 / "salida_sprint2"
+SAL3 = AQUI / "salida_sprint3"
 REGISTRO = AQUI / "modelos"
-sys.path.insert(0, str(AQUI))
-from preprocesado import CLASES, preprocesar  # noqa: E402
+
+# modelos desplegados = mejores por validacion del Sprint 2 (semilla 2024)
+DESPLIEGUE = {
+    "clasificador_v1": dict(pt=SAL2 / "clf_efficientnet_b0_20261023_004900.pt", tarea="clasificacion",
+                            construir=lambda ck: crear_clasificador(ck["arquitectura"], preentrenado=False)),
+    "segmentacion_v1": dict(pt=SAL2 / "unet_resnet34_20261023_005828.pt", tarea="segmentacion",
+                            construir=lambda ck: crear_unet(ck["encoder"], preentrenado=False)),
+}
+REENTRENADO = {
+    "clasificador_final": dict(pt=SAL3 / "clasificador_final.pt", tarea="clasificacion",
+                               construir=lambda ck: crear_clasificador(ck["arquitectura"], preentrenado=False)),
+    "unet_final": dict(pt=SAL3 / "unet_final.pt", tarea="segmentacion",
+                       construir=lambda ck: crear_unet(ck.get("encoder", "resnet34"), preentrenado=False)),
+}
 
 
-def entradas_reales(n=5):
-    """Unas imagenes reales de prueba, preprocesadas (en-distribucion), para medir la paridad de forma
-    representativa; si no esta el dataset, cae a ruido aleatorio."""
+def sha256(ruta):
+    h = hashlib.sha256()
+    with open(ruta, "rb") as f:
+        for bloque in iter(lambda: f.read(1 << 20), b""):
+            h.update(bloque)
+    return h.hexdigest()
+
+
+def entradas_reales(n=20):
     raiz = Path(os.environ.get("BRISC_PREPARADO", Path.home() / "datasets" / "brisc2025_preparado"))
     man = raiz / "manifest_preparado.csv"
     if man.exists():
-        test = pd.read_csv(man).query("particion == 'test'").head(n)
-        xs = []
-        for r in test.itertuples():
-            with Image.open(raiz / r.ruta_imagen) as im:
-                xs.append(preprocesar(im)[0])
+        val = pd.read_csv(man).query("particion == 'val'").head(n)
+        xs = [preprocesar(Image.open(raiz / r.ruta_imagen))[0] for r in val.itertuples()]
         return np.concatenate(xs, axis=0).astype(np.float32)
     return np.random.randn(n, 3, 256, 256).astype(np.float32)
 
 
-def exportar(nombre, construir, ruta_pt, device):
-    ck = torch.load(ruta_pt, map_location="cpu", weights_only=False)
-    modelo = construir().to(device)
-    modelo.load_state_dict(ck["modelo"])
-    modelo.eval()
+def exportar(nombre, cfg, device):
+    ck = torch.load(cfg["pt"], map_location="cpu", weights_only=False)
+    modelo = cfg["construir"](ck).to(device)
+    modelo.load_state_dict(ck["modelo"]); modelo.eval()
 
     REGISTRO.mkdir(exist_ok=True)
     ruta_onnx = REGISTRO / f"{nombre}.onnx"
-    entrada = entradas_reales(5)
+    entrada = entradas_reales(20)
     ejemplo = torch.from_numpy(entrada).to(device)
-
-    # salida de referencia en modo eval ANTES de exportar (la exportacion puede dejar el modelo en train)
     with torch.no_grad():
         salida_torch = modelo(ejemplo).cpu().numpy()
-
-    torch.onnx.export(
-        modelo, ejemplo[:1], str(ruta_onnx), input_names=["entrada"], output_names=["salida"],
-        dynamic_axes={"entrada": {0: "lote"}, "salida": {0: "lote"}}, opset_version=17,
-        dynamo=False,  # exportador clasico (TorchScript): paridad numerica estricta
-    )
+    torch.onnx.export(modelo, ejemplo[:1], str(ruta_onnx), input_names=["imagen"], output_names=["salida"],
+                      dynamic_axes={"imagen": {0: "lote"}, "salida": {0: "lote"}}, opset_version=17, dynamo=False)
 
     sesion = ort.InferenceSession(str(ruta_onnx), providers=["CPUExecutionProvider"])
-    salida_onnx = sesion.run(None, {"entrada": entrada})[0]
+    salida_onnx = sesion.run(None, {"imagen": entrada})[0]
     max_dif = float(np.abs(salida_torch - salida_onnx).max())
-    # criterio funcional: en clasificacion, la clase predicha (argmax) debe coincidir en las 5 imagenes;
-    # en segmentacion, la decision de mascara (umbral 0.5) debe coincidir en casi todos los pixeles.
-    if salida_onnx.ndim == 2:
+    if cfg["tarea"] == "clasificacion":
         igual = bool((salida_torch.argmax(1) == salida_onnx.argmax(1)).all())
-        criterio = "clase predicha identica en las 5 imagenes" if igual else "DISCREPANCIA en la clase predicha"
+        criterio = "clase identica en 20 imagenes" if igual else "DISCREPANCIA de clase"
     else:
         coincide = float(((salida_torch > 0) == (salida_onnx > 0)).mean())
         igual = coincide > 0.999
-        criterio = f"decision de mascara coincide en {coincide*100:.3f}% de los pixeles"
-    print(f"{nombre}: forma {salida_onnx.shape}, dif. maxima PyTorch vs ONNX = {max_dif:.2e} — {criterio}")
+        criterio = f"mascara coincide en {coincide*100:.3f}% de pixeles"
+    print(f"{nombre}: dif maxima {max_dif:.2e} — {criterio}")
     if not igual or max_dif > 5e-2:
-        raise RuntimeError(f"La paridad fallo para {nombre}: dif {max_dif:.2e}, {criterio}")
+        raise RuntimeError(f"Paridad fallida para {nombre}: {max_dif:.2e}, {criterio}")
 
-    tam_mb = ruta_onnx.stat().st_size / 1e6
-    proc_path = SALIDA / f"{nombre}_procedencia.json"
-    proc = json.loads(proc_path.read_text(encoding="utf-8")) if proc_path.exists() else {}
+    import onnxruntime, torch as _t
+    try:
+        import segmentation_models_pytorch as smp
+        v_smp = smp.__version__
+    except Exception:
+        v_smp = "n/d"
+    tam_mb = sum(p.stat().st_size for p in REGISTRO.glob(f"{nombre}.onnx*")) / 1e6
     tarjeta = dict(
-        modelo=nombre, formato="ONNX opset 17", archivo=ruta_onnx.name, tamano_mb=round(tam_mb, 1),
-        fecha_exportacion=datetime.now().strftime("%Y-%m-%d %H:%M"),
-        entrada="float32 [lote, 3, 256, 256] — imagen en gris repetida en 3 canales, normalizacion de ImageNet",
-        salida=("float32 [lote, 4] logits de clase (" + ", ".join(CLASES) + ")") if "clasificador" in nombre
-        else "float32 [lote, 1, 256, 256] logits de mascara (aplicar sigmoide y umbral 0.5)",
-        paridad_pytorch_onnx=f"diferencia maxima {max_dif:.2e}", entrenamiento=proc,
+        modelo=nombre, tarea=cfg["tarea"], formato="ONNX opset 17",
+        archivo=ruta_onnx.name, tamano_mb=round(tam_mb, 1),
+        sha256=sha256(ruta_onnx), fecha_exportacion=datetime.now().strftime("%Y-%m-%d %H:%M"),
+        punto_de_control=cfg["pt"].name, semilla=ck.get("semilla", "ver_experimentos"),
+        epoca_optima=ck.get("epoca"),
+        entrada="float32 [lote,3,256,256] — imagen en gris repetida en 3 canales, normalizacion ImageNet",
+        salida=("float32 [lote,4] logits (" + ", ".join(["glioma", "meningioma", "pituitary", "no_tumor"]) + ")")
+        if cfg["tarea"] == "clasificacion" else "float32 [lote,1,256,256] logits (sigmoide, umbral 0.5)",
+        paridad_pytorch_onnx=f"dif maxima {max_dif:.2e}, {criterio}",
+        versiones=dict(torch=_t.__version__, onnxruntime=onnxruntime.__version__, segmentation_models_pytorch=v_smp),
     )
     (REGISTRO / f"{nombre}_tarjeta.json").write_text(json.dumps(tarjeta, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"  -> {ruta_onnx}  ({tam_mb:.1f} MB)  + tarjeta de modelo")
+    print(f"  -> {ruta_onnx}  ({tam_mb:.1f} MB)  sha256 {tarjeta['sha256'][:12]}…")
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--tarea", default="ambas", choices=["ambas", "clasificacion", "segmentacion"])
+    ap.add_argument("--reentrenado", action="store_true", help="exporta la alternativa reentrenada sobre train+val")
     args = ap.parse_args()
-    device = torch.device("cpu")  # exportacion en CPU: la paridad se mide ahi mismo
-
-    if args.tarea in ("ambas", "clasificacion"):
-        exportar("clasificador_final", lambda: crear_clasificador("efficientnet_b0", preentrenado=False),
-                 SALIDA / "clasificador_final.pt", device)
-    if args.tarea in ("ambas", "segmentacion"):
-        exportar("unet_final", lambda: crear_unet("resnet34", preentrenado=False),
-                 SALIDA / "unet_final.pt", device)
+    device = torch.device("cpu")
+    cjto = REENTRENADO if args.reentrenado else DESPLIEGUE
+    for nombre, cfg in cjto.items():
+        if cfg["pt"].exists():
+            exportar(nombre, cfg, device)
+        else:
+            print(f"(omitido {nombre}: no existe {cfg['pt']})")
     print("\nListo. Modelos ONNX en:", REGISTRO)
 
 

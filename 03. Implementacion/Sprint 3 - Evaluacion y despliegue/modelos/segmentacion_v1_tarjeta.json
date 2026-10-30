@@ -1,0 +1,20 @@
+{
+  "modelo": "segmentacion_v1",
+  "tarea": "segmentacion",
+  "formato": "ONNX opset 17",
+  "archivo": "segmentacion_v1.onnx",
+  "tamano_mb": 97.7,
+  "sha256": "871540c1f936e7784f96fde8b0eebd8c47891144095a64cc846c95b3d5cec010",
+  "fecha_exportacion": "2026-10-30 03:42",
+  "punto_de_control": "unet_resnet34_20261023_005828.pt",
+  "semilla": "ver_experimentos",
+  "epoca_optima": 24,
+  "entrada": "float32 [lote,3,256,256] — imagen en gris repetida en 3 canales, normalizacion ImageNet",
+  "salida": "float32 [lote,1,256,256] logits (sigmoide, umbral 0.5)",
+  "paridad_pytorch_onnx": "dif maxima 2.77e-04, mascara coincide en 100.000% de pixeles",
+  "versiones": {
+    "torch": "2.11.0+cu128",
+    "onnxruntime": "1.31.1",
+    "segmentation_models_pytorch": "0.5.0"
+  }
+}

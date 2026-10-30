@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% set seccion = 'ficha' %}
+{% block titulo %}Ficha del modelo — NeuroBRISC{% endblock %}
+{% block contenido %}
+<div class="encabezado-seccion">
+  <h1>Ficha de los modelos</h1>
+  <p class="subtitulo">Datos de entrenamiento, métricas y limitaciones. Versión desplegada: {{ VERSION_MODELOS }}.</p>
+</div>
+
+<div class="fichas">
+  <section class="ficha">
+    <h2>Clasificador de tipo de tumor</h2>
+    <p class="tenue">EfficientNetB0 (transfer learning de ImageNet). Entrada: imagen T1 en gris, 256×256. Salida:
+    4 clases (glioma, meningioma, tumor de hipófisis, sin tumor).</p>
+    <dl class="datos-ficha">
+      <div><dt>Validación (Sprint 2, 3 semillas)</dt><dd>recall medio 99,57 % ± 0,15 %</dd></div>
+      <div><dt>Prueba oficial (HU12, desplegado)</dt><dd>accuracy 99,10 % · F1 macro 99,2 %</dd></div>
+      <div><dt>Recall por clase (prueba)</dt><dd>glioma 97,2 % · meningioma 99,7 % · hipófisis 99,7 % · sin tumor 100 %</dd></div>
+    </dl>
+  </section>
+  <section class="ficha">
+    <h2>Segmentador del tumor</h2>
+    <p class="tenue">U-Net con encoder ResNet34 (transfer learning de ImageNet). Solo se entrenó con imágenes con
+    tumor; por eso, si el clasificador dice «sin tumor», no se muestra contorno.</p>
+    <dl class="datos-ficha">
+      <div><dt>Validación (Sprint 2, 3 semillas)</dt><dd>IoU 80,12 % ± 0,33 %</dd></div>
+      <div><dt>Prueba oficial (HU12, desplegado)</dt><dd>IoU 80,10 % · Dice 87,07 %</dd></div>
+      <div><dt>IoU por clase (prueba)</dt><dd>glioma 68,0 % · meningioma 89,8 % · hipófisis 80,5 %</dd></div>
+    </dl>
+  </section>
+</div>
+
+<section class="ficha ancha">
+  <h2>Uso previsto y no previsto</h2>
+  <p><strong>Previsto:</strong> demostración académica y apoyo a la lectura del médico sobre resonancias T1 con
+  contraste del dataset BRISC 2025.</p>
+  <p><strong>No previsto:</strong> diagnóstico, uso con pacientes reales, otras secuencias de resonancia u otros
+  escáneres. El sistema solo conoce el tipo de imagen con el que se entrenó.</p>
+  <h2>Limitaciones</h2>
+  <ul>
+    <li>El dataset no tiene identificador de paciente; la evaluación controla la fuga con partición por hash y un
+    subconjunto sin imágenes casi idénticas al entrenamiento.</li>
+    <li>El glioma es la clase más difícil (menor recall de clasificación y menor IoU de segmentación).</li>
+    <li>Un solo dataset y una sola secuencia (T1 con contraste); no se probó la generalización a otras fuentes.</li>
+    <li>La prueba oficial se evaluó una sola vez; el modelo desplegado se eligió por validación, no por la prueba.</li>
+  </ul>
+  {% if registro.commit_git %}<p class="tenue mono">Registro de modelos — commit {{ registro.commit_git }} · {{ registro.generado }}</p>{% endif %}
+</section>
+<p class="nota-pie">{{ AVISO }}</p>
+{% endblock %}
