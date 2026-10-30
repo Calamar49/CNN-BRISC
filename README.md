@@ -84,9 +84,30 @@ La partición es determinista (semilla 42): en una ejecución limpia, sin PyTorc
 
 Detalles y hallazgos en el README de `Sprint 1 - Notebooks/`.
 
-## Para continuar con el Sprint 2
+## Sprints 2 y 3 (modelado, evaluación y despliegue)
+
+- **Sprint 2 — modelado** (`03. Implementacion/Sprint 2 - Entrenamiento/`): clasificador (EfficientNetB0) y
+  segmentador (U-Net ResNet34), 13 entrenamientos en `experimentos.csv`. Ver su README.
+- **Sprint 3 — evaluación y despliegue** (`03. Implementacion/Sprint 3 - Evaluacion y despliegue/`): evaluación
+  única sobre la prueba oficial (HU12), aplicación web de demostración (HU13), MLOps básico (HU14). Resultados en
+  la prueba: clasificación **99,10 % accuracy**, segmentación **IoU 80,10 %**; las tres metas del acta se cumplen.
+
+### Probar la aplicación de demostración (prototipo clínico)
+
+```bash
+cd "03. Implementacion/Sprint 3 - Evaluacion y despliegue"
+python exportar_onnx.py                              # genera los modelos ONNX (necesita los .pt del Sprint 2)
+pip install -r requirements-app.txt
+python -m uvicorn app.servidor:app --port 8000       # o: iniciar_demo.bat  (Windows)
+# abrir http://localhost:8000   (medico / medico123)
+```
+
+Funciona en local y **sin internet**. No es una herramienta de diagnóstico médico; usuarios y datos ficticios.
+
+## Documentos de contexto
 - `CLAUDE.md`: contexto y reglas del proyecto (lo lee Claude Code automáticamente).
-- `docs/TRASPASO_SPRINT2.md`: estado, qué falta, cómo se hará, entorno y versiones, plan de tiempo y pendientes.
+- `docs/PLAN_SPRINT3.md`: plan del Sprint 3 y del sistema web.
+- `docs/TRASPASO_SPRINT2.md`: contexto del Sprint 2 (entorno, versiones, protocolo de modelado).
 - `herramientas/`: generadores del informe y de las presentaciones.
 
 ## Estado
