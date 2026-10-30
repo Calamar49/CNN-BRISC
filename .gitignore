@@ -26,6 +26,9 @@ __pycache__/
 # dataset y se regeneran). Las tablas de resultados (salida_sprint3/*.json, *.csv) y las figuras SI se suben.
 03. Implementacion/Sprint 3 - Evaluacion y despliegue/app/datos_demo/
 
+# Carpeta de imagenes de prueba del dataset (son imagenes del dataset; la carpeta otras/ y el LEEME SI se suben)
+fotos_prueba/dataset/
+
 # credenciales
 .kaggle/
 kaggle.json

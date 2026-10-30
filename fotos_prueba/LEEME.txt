@@ -1,0 +1,24 @@
+Carpetas de imágenes para probar NeuroBRISC
+===========================================
+
+Aquí hay imágenes para poner a prueba el sistema desde la opción "Nuevo estudio"
+o "Nuevo paciente" de la aplicación (o arrastrándolas al cargador).
+
+  dataset/   12 resonancias REALES de la prueba oficial del dataset BRISC 2025
+             (3 de cada clase: glioma, meningioma, hipófisis y sin tumor).
+             Sirven para ver el sistema funcionando con casos conocidos.
+             Son imagenes del dataset: no se suben al repositorio.
+
+  otras/     Imágenes de OTRAS fuentes (de internet, otros escáneres o de prueba),
+             para ver cómo responde el sistema fuera de su dominio. Puedes colocar
+             aquí cualquier PNG o JPG. Incluye "ejemplo_fuera_de_dominio.png", que
+             NO es una resonancia: el sistema la acepta pero avisa que el brillo
+             está fuera del rango de entrenamiento (el modelo solo conoce T1 con
+             contraste). Asi se ve que el sistema es honesto con entradas que no
+             conoce.
+
+Recomendación: para probar la generalización con resonancias reales de otra
+procedencia, descarga imágenes T1 con contraste de bancos públicos (por ejemplo,
+Wikimedia Commons u OpenNeuro, respetando su licencia) y colócalas en otras/.
+
+Recuerda: es una demostración académica, NO un diagnóstico médico.

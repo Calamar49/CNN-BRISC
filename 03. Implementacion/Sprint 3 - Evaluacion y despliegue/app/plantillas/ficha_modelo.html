@@ -2,49 +2,148 @@
 {% set seccion = 'ficha' %}
 {% block titulo %}Ficha del modelo — NeuroBRISC{% endblock %}
 {% block contenido %}
-<div class="encabezado-seccion">
-  <h1>Ficha de los modelos</h1>
-  <p class="subtitulo">Datos de entrenamiento, métricas y limitaciones. Versión desplegada: {{ VERSION_MODELOS }}.</p>
-</div>
 
-<div class="fichas">
-  <section class="ficha">
-    <h2>Clasificador de tipo de tumor</h2>
-    <p class="tenue">EfficientNetB0 (transfer learning de ImageNet). Entrada: imagen T1 en gris, 256×256. Salida:
-    4 clases (glioma, meningioma, tumor de hipófisis, sin tumor).</p>
-    <dl class="datos-ficha">
-      <div><dt>Validación (Sprint 2, 3 semillas)</dt><dd>recall medio 99,57 % ± 0,15 %</dd></div>
-      <div><dt>Prueba oficial (HU12, desplegado)</dt><dd>accuracy 99,10 % · F1 macro 99,2 %</dd></div>
-      <div><dt>Recall por clase (prueba)</dt><dd>glioma 97,2 % · meningioma 99,7 % · hipófisis 99,7 % · sin tumor 100 %</dd></div>
-    </dl>
-  </section>
-  <section class="ficha">
-    <h2>Segmentador del tumor</h2>
-    <p class="tenue">U-Net con encoder ResNet34 (transfer learning de ImageNet). Solo se entrenó con imágenes con
-    tumor; por eso, si el clasificador dice «sin tumor», no se muestra contorno.</p>
-    <dl class="datos-ficha">
-      <div><dt>Validación (Sprint 2, 3 semillas)</dt><dd>IoU 80,12 % ± 0,33 %</dd></div>
-      <div><dt>Prueba oficial (HU12, desplegado)</dt><dd>IoU 80,10 % · Dice 87,07 %</dd></div>
-      <div><dt>IoU por clase (prueba)</dt><dd>glioma 68,0 % · meningioma 89,8 % · hipófisis 80,5 %</dd></div>
-    </dl>
-  </section>
-</div>
+<section class="ficha-hero">
+  <div>
+    <h1>Ficha de los modelos</h1>
+    <p class="ficha-lede">Dos redes neuronales trabajan juntas sobre una resonancia T1 con contraste: una
+    <strong>clasifica</strong> el tipo de tumor entre cuatro categorías y otra <strong>segmenta</strong> su
+    contorno. El resultado es un <strong>apoyo a la lectura del médico</strong>, no un diagnóstico.</p>
+    <p class="ficha-version mono">Versión desplegada: {{ VERSION_MODELOS }} · inferencia en CPU con ONNX Runtime</p>
+  </div>
+  <div class="hero-cifras">
+    <div><span class="num">99,10 %</span><span class="et">accuracy de clasificación (prueba oficial)</span></div>
+    <div><span class="num">80,10 %</span><span class="et">IoU de segmentación (prueba oficial)</span></div>
+  </div>
+</section>
 
-<section class="ficha ancha">
-  <h2>Uso previsto y no previsto</h2>
-  <p><strong>Previsto:</strong> demostración académica y apoyo a la lectura del médico sobre resonancias T1 con
-  contraste del dataset BRISC 2025.</p>
-  <p><strong>No previsto:</strong> diagnóstico, uso con pacientes reales, otras secuencias de resonancia u otros
-  escáneres. El sistema solo conoce el tipo de imagen con el que se entrenó.</p>
-  <h2>Limitaciones</h2>
-  <ul>
-    <li>El dataset no tiene identificador de paciente; la evaluación controla la fuga con partición por hash y un
-    subconjunto sin imágenes casi idénticas al entrenamiento.</li>
-    <li>El glioma es la clase más difícil (menor recall de clasificación y menor IoU de segmentación).</li>
-    <li>Un solo dataset y una sola secuencia (T1 con contraste); no se probó la generalización a otras fuentes.</li>
-    <li>La prueba oficial se evaluó una sola vez; el modelo desplegado se eligió por validación, no por la prueba.</li>
-  </ul>
-  {% if registro.commit_git %}<p class="tenue mono">Registro de modelos — commit {{ registro.commit_git }} · {{ registro.generado }}</p>{% endif %}
+<section class="ficha-seccion">
+  <h2>Cómo funciona</h2>
+  <p class="ficha-intro">La imagen pasa por un preprocesado idéntico al del entrenamiento y luego por los dos
+  modelos en paralelo. Si el clasificador indica «sin tumor», no se muestra contorno.</p>
+  <div class="pipeline">
+    <svg viewBox="0 0 980 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama del flujo">
+      <defs>
+        <marker id="flecha" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 Z" fill="#5B84B1"/>
+        </marker>
+      </defs>
+      <g font-family="Segoe UI, sans-serif" font-size="13">
+        <rect x="8" y="78" width="150" height="64" rx="6" fill="#f2f5fa" stroke="#cfd6e0"/>
+        <text x="83" y="104" text-anchor="middle" fill="#1F3864" font-weight="600">Resonancia T1</text>
+        <text x="83" y="122" text-anchor="middle" fill="#697585">PNG / JPG</text>
+
+        <rect x="208" y="78" width="180" height="64" rx="6" fill="#f2f5fa" stroke="#cfd6e0"/>
+        <text x="298" y="100" text-anchor="middle" fill="#1F3864" font-weight="600">Preprocesado</text>
+        <text x="298" y="118" text-anchor="middle" fill="#697585">gris · 256×256 · ImageNet</text>
+
+        <rect x="470" y="22" width="210" height="64" rx="6" fill="#eaf0fa" stroke="#5B84B1"/>
+        <text x="575" y="44" text-anchor="middle" fill="#1F3864" font-weight="600">Clasificador</text>
+        <text x="575" y="62" text-anchor="middle" fill="#697585">EfficientNetB0 · 4 clases</text>
+
+        <rect x="470" y="134" width="210" height="64" rx="6" fill="#eaf0fa" stroke="#2B7A8B"/>
+        <text x="575" y="156" text-anchor="middle" fill="#1F3864" font-weight="600">Segmentador</text>
+        <text x="575" y="174" text-anchor="middle" fill="#697585">U-Net ResNet34 · contorno</text>
+
+        <rect x="762" y="78" width="210" height="64" rx="6" fill="#f2f5fa" stroke="#cfd6e0"/>
+        <text x="867" y="100" text-anchor="middle" fill="#1F3864" font-weight="600">Resultado</text>
+        <text x="867" y="118" text-anchor="middle" fill="#697585">clase + contorno + revisión</text>
+
+        <line x1="158" y1="110" x2="206" y2="110" stroke="#5B84B1" stroke-width="2" marker-end="url(#flecha)"/>
+        <line x1="388" y1="104" x2="468" y2="60" stroke="#5B84B1" stroke-width="2" marker-end="url(#flecha)"/>
+        <line x1="388" y1="116" x2="468" y2="162" stroke="#2B7A8B" stroke-width="2" marker-end="url(#flecha)"/>
+        <line x1="680" y1="54" x2="760" y2="100" stroke="#5B84B1" stroke-width="2" marker-end="url(#flecha)"/>
+        <line x1="680" y1="166" x2="760" y2="120" stroke="#2B7A8B" stroke-width="2" marker-end="url(#flecha)"/>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<section class="ficha-seccion">
+  <h2>Los dos modelos</h2>
+  <div class="fichas">
+    <article class="ficha">
+      <h3>Clasificador de tipo de tumor</h3>
+      <p class="tenue">EfficientNetB0 con transfer learning de ImageNet. Entrada 3×256×256; salida: glioma,
+      meningioma, tumor de hipófisis o sin tumor.</p>
+      <dl class="datos-ficha">
+        <div><dt>Validación (3 semillas)</dt><dd>recall 99,57 % ± 0,15 %</dd></div>
+        <div><dt>Prueba oficial</dt><dd>accuracy 99,10 % · F1 99,2 %</dd></div>
+        <div><dt>Recall por clase (prueba)</dt><dd>glioma 97,2 % · meningioma 99,7 % · hipófisis 99,7 % · sin tumor 100 %</dd></div>
+      </dl>
+    </article>
+    <article class="ficha">
+      <h3>Segmentador del tumor</h3>
+      <p class="tenue">U-Net con encoder ResNet34 (ImageNet). Solo se entrenó con imágenes con tumor; por eso, si el
+      clasificador dice «sin tumor», no se marca contorno.</p>
+      <dl class="datos-ficha">
+        <div><dt>Validación (3 semillas)</dt><dd>IoU 80,12 % ± 0,33 %</dd></div>
+        <div><dt>Prueba oficial</dt><dd>IoU 80,10 % · Dice 87,07 %</dd></div>
+        <div><dt>IoU por clase (prueba)</dt><dd>glioma 68,0 % · meningioma 89,8 % · hipófisis 80,5 %</dd></div>
+      </dl>
+    </article>
+  </div>
+</section>
+
+<section class="ficha-seccion">
+  <h2>Desempeño en la prueba oficial</h2>
+  <p class="ficha-intro">La prueba oficial (1.000 imágenes) se evaluó <strong>una sola vez</strong>. El modelo
+  desplegado se eligió por validación (semilla 2024), no mirando la prueba. Las tres metas del acta se cumplen.</p>
+  <div class="graficos">
+    <figure><img src="/estatico/graficos/val_vs_prueba.png" alt="Validación vs prueba">
+      <figcaption>El desempeño en la prueba es casi igual al de validación: el modelo generaliza.</figcaption></figure>
+    <figure><img src="/estatico/graficos/prueba_recall_por_clase.png" alt="Recall por clase">
+      <figcaption>Recall por clase; todas superan la meta de 90 %. El glioma es la clase más difícil.</figcaption></figure>
+    <figure><img src="/estatico/graficos/prueba_iou_por_clase.png" alt="IoU por clase">
+      <figcaption>IoU y Dice por clase; el glioma, de bajo contraste, es el más difícil de segmentar.</figcaption></figure>
+    <figure><img src="/estatico/graficos/prueba_matriz_confusion.png" alt="Matriz de confusión">
+      <figcaption>Matriz de confusión sobre las 1.000 imágenes de la prueba oficial.</figcaption></figure>
+  </div>
+</section>
+
+<section class="ficha-seccion ficha-gris">
+  <h2>Cómo se evaluó y qué significa</h2>
+  <div class="dos-columnas">
+    <div>
+      <p>Para elegir los modelos se usó solo la validación; la prueba oficial se reservó y se midió una única vez
+      (HU12). Se evaluaron tres semillas por tarea y se reporta el promedio. Para acotar la fuga de datos, se midió
+      también el subconjunto <strong>sin imágenes casi idénticas</strong> al entrenamiento: el desempeño baja poco
+      (accuracy 98,9 %, IoU 78,4 %), así que el efecto de la fuga es pequeño.</p>
+    </div>
+    <table class="tabla">
+      <thead><tr><th>Métrica</th><th>Meta</th><th>Logrado</th></tr></thead>
+      <tbody>
+        <tr><td>Accuracy</td><td class="mono">≥ 95 %</td><td class="mono">99,10 % ✓</td></tr>
+        <tr><td>Recall mínimo por clase</td><td class="mono">≥ 90 %</td><td class="mono">97,2 % ✓</td></tr>
+        <tr><td>IoU</td><td class="mono">≥ 70 %</td><td class="mono">80,10 % ✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="ficha-seccion">
+  <h2>Uso, limitaciones y créditos</h2>
+  <div class="fichas">
+    <article class="ficha">
+      <h3>Uso previsto y no previsto</h3>
+      <p><strong>Previsto:</strong> demostración académica y apoyo a la lectura del médico sobre resonancias T1 con
+      contraste del dataset BRISC 2025.</p>
+      <p><strong>No previsto:</strong> diagnóstico, uso con pacientes reales, otras secuencias de resonancia u otros
+      escáneres. El sistema solo conoce el tipo de imagen con el que se entrenó.</p>
+    </article>
+    <article class="ficha">
+      <h3>Limitaciones</h3>
+      <ul>
+        <li>El glioma es la clase más difícil (menor recall y menor IoU).</li>
+        <li>Un solo dataset y una sola secuencia (T1 con contraste); sin prueba de generalización a otras fuentes.</li>
+        <li>La prueba oficial se evaluó una sola vez; el modelo se eligió por validación.</li>
+        <li>El dataset no tiene identificador de paciente; se controla la fuga con partición por hash.</li>
+      </ul>
+    </article>
+  </div>
+  <p class="nota-pie">Imágenes del dataset público <strong>BRISC 2025</strong> (CC BY 4.0). Procesamiento en local;
+  no se envían imágenes a servicios externos.{% if registro.commit_git %} Registro de modelos — commit
+  <span class="mono">{{ registro.commit_git }}</span>.{% endif %}</p>
 </section>
 <p class="nota-pie">{{ AVISO }}</p>
 {% endblock %}

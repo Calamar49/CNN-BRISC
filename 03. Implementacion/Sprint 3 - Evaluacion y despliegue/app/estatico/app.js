@@ -28,11 +28,23 @@ window.togglePlan = togglePlan;
       if (txt && entrada.files[0]) txt.textContent = entrada.files[0].name;
     });
   }
-  const form = document.getElementById("formEstudio");
-  if (form) {
-    form.addEventListener("submit", function () {
-      const p = document.getElementById("procesando");
-      if (p) p.hidden = false;
-    });
+  for (const id of ["formEstudio", "formPaciente"]) {
+    const form = document.getElementById(id);
+    if (form) {
+      form.addEventListener("submit", function () {
+        const p = document.getElementById("procesando");
+        if (p) p.hidden = false;
+        const b = document.getElementById("botonAnalizar");
+        if (b) { b.disabled = true; b.textContent = "Procesando…"; }
+      });
+    }
   }
 })();
+
+// Formulario de nuevo paciente: mostrar el campo de texto si el motivo es "Otro"
+function verOtro() {
+  const sel = document.getElementById("selMotivo");
+  const campo = document.getElementById("campoOtro");
+  if (sel && campo) campo.hidden = sel.value !== "__otro__";
+}
+window.verOtro = verOtro;

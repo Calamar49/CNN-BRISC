@@ -178,7 +178,47 @@ code { font-family: var(--mono); background: var(--panel-2); padding: 1px 5px; b
 .informe-pie { border-top: 1px solid var(--linea); padding-top: 14px; margin-top: 10px; }
 .informe-pie p { margin: 0 0 6px; font-size: .85rem; }
 
+/* ---------- ficha del modelo (landing) ---------- */
+.ficha-hero { display: grid; grid-template-columns: 1.6fr 1fr; gap: 28px; align-items: center;
+  background: linear-gradient(180deg, #ffffff, #f7f9fc); border: 1px solid var(--linea); border-radius: 10px;
+  padding: 30px 32px; margin-bottom: 26px; }
+.ficha-lede { font-size: 1.08rem; color: var(--texto); line-height: 1.6; margin: 10px 0 12px; max-width: 60ch; }
+.ficha-version { color: var(--mutado); font-size: .82rem; }
+.hero-cifras { display: flex; flex-direction: column; gap: 14px; }
+.hero-cifras > div { background: var(--navy); color: #fff; border-radius: 8px; padding: 16px 20px; }
+.hero-cifras .num { display: block; font-size: 1.9rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.hero-cifras .et { display: block; font-size: .8rem; color: #c3cfe2; margin-top: 2px; }
+.ficha-seccion { margin: 30px 0; }
+.ficha-seccion > h2 { font-size: 1.3rem; padding-bottom: 8px; border-bottom: 2px solid var(--navy); margin-bottom: 14px; }
+.ficha-intro { color: var(--mutado); max-width: 75ch; margin: 0 0 18px; }
+.ficha-gris { background: var(--panel-2); border: 1px solid var(--linea); border-radius: 10px; padding: 24px 28px; }
+.pipeline { background: var(--panel); border: 1px solid var(--linea); border-radius: 10px; padding: 18px; overflow-x: auto; }
+.pipeline svg { width: 100%; min-width: 760px; height: auto; display: block; }
+.graficos { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.graficos figure { margin: 0; background: var(--panel); border: 1px solid var(--linea); border-radius: 8px; padding: 16px; }
+.graficos img { width: 100%; height: auto; display: block; }
+.graficos figcaption { color: var(--mutado); font-size: .84rem; margin-top: 10px; line-height: 1.4; }
+.ficha article h3 { margin-top: 0; }
+
+/* ---------- formulario de nuevo paciente ---------- */
+.subir h2 { margin-top: 0; font-size: 1.05rem; }
+.campo { display: flex; flex-direction: column; gap: 5px; font-size: .85rem; color: var(--mutado); margin-bottom: 14px; }
+.campo input, .campo select { padding: 9px 11px; border: 1px solid var(--linea-fuerte); border-radius: 5px;
+  font-family: inherit; font-size: .95rem; color: var(--texto); background: #fff; }
+.campo input:focus, .campo select:focus { outline: 2px solid var(--acero); border-color: var(--acero); }
+.campos-fila { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.galeria-radio { gap: 10px; }
+.ejemplo-radio { position: relative; cursor: pointer; border: 2px solid var(--linea); border-radius: 6px;
+  overflow: hidden; width: 86px; background: #000; display: block; }
+.ejemplo-radio input { position: absolute; opacity: 0; }
+.ejemplo-radio img { width: 100%; aspect-ratio: 1; display: block; }
+.ejemplo-radio span { display: block; font-size: .66rem; color: var(--mutado); padding: 3px 5px; background: #fff; }
+.ejemplo-radio input:checked ~ img { outline: 3px solid var(--navy); outline-offset: -3px; }
+.ejemplo-radio:has(input:checked) { border-color: var(--navy); }
+.acciones-form { display: flex; align-items: center; gap: 16px; margin-top: 18px; }
+
 @media (max-width: 920px) {
+  .ficha-hero, .graficos { grid-template-columns: 1fr; }
   .disposicion { grid-template-columns: 1fr; }
   .lateral { position: static; height: auto; }
   .resultado, .fichas, .dos-columnas, .informe-resultado { grid-template-columns: 1fr; }

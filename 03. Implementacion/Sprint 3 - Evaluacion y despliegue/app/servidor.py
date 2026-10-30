@@ -39,7 +39,7 @@ AVISO = "Demostración académica. Apoyo al diagnóstico, no es un diagnóstico 
 app = FastAPI(title="Sistema clínico (demostración académica)")
 plantillas = Jinja2Templates(directory=str(AQUI / "plantillas"))
 plantillas.env.globals.update(AVISO=AVISO, MODULOS=MODULOS, VERSION_MODELOS=VERSION_MODELOS,
-                              UMBRAL=int(UMBRAL_CONFIANZA * 100))
+                              UMBRAL=int(UMBRAL_CONFIANZA * 100), MOTIVOS=bd.MOTIVOS)
 
 
 def _preparar_demo():
@@ -54,7 +54,7 @@ def _preparar_demo():
     DEMO.mkdir(parents=True, exist_ok=True)
     man = pd.read_csv(man_path)
     val = man[man.particion == "val"]
-    plan = [("glioma", 2), ("meningioma", 1), ("pituitary", 1), ("no_tumor", 1)]  # 5 ejemplos variados
+    plan = [("glioma", 2), ("meningioma", 2), ("pituitary", 1), ("no_tumor", 1)]  # 6 ejemplos variados
     n = 0
     for clase, k in plan:
         for i, r in enumerate(val[val.clase == clase].head(k).itertuples()):
@@ -63,6 +63,29 @@ def _preparar_demo():
                 n += 1
             except Exception:
                 pass
+
+
+def _sembrar_estudios():
+    """Si no hay estudios, le crea uno (con diagnóstico real) a cada paciente, para que todos tengan foto y
+    resultado. Usa las imágenes de ejemplo; la revisión del médico queda aceptada en algunos para dar realismo."""
+    con = bd.conectar()
+    hay = con.execute("SELECT 1 FROM estudios LIMIT 1").fetchone()
+    pacientes = con.execute("SELECT id FROM pacientes ORDER BY codigo").fetchall()
+    con.close()
+    if hay:
+        return
+    ejemplos = sorted(DEMO.glob("*.png"))
+    if not ejemplos:
+        return
+    for i, p in enumerate(pacientes):
+        ruta = ejemplos[i % len(ejemplos)]
+        try:
+            pred = predecir(Image.open(ruta))
+            eid = bd.guardar_estudio(p["id"], ruta.name, pred)
+            if i % 2 == 0:  # la mitad ya revisados por el médico (aceptados)
+                bd.guardar_revision(eid, "aceptado", pred["clase_es"], "", "Dra. Médico de demostración")
+        except Exception:
+            pass
 
 
 def _usuario(request):
@@ -111,6 +134,43 @@ async def casos(request: Request):
     if not _usuario(request):
         return RedirectResponse("/login")
     return plantillas.TemplateResponse(request, "casos.html", _ctx(request, pacientes=bd.pacientes()))
+
+
+@app.get("/paciente/nuevo", response_class=HTMLResponse)
+async def paciente_nuevo_form(request: Request):
+    if not _usuario(request):
+        return RedirectResponse("/login")
+    ejemplos = sorted(f.name for f in DEMO.glob("*.png")) if DEMO.exists() else []
+    return plantillas.TemplateResponse(request, "nuevo_paciente.html", _ctx(request, error=None, ejemplos=ejemplos))
+
+
+@app.post("/paciente/nuevo", response_class=HTMLResponse)
+async def paciente_nuevo_post(request: Request, nombre: str = Form(...), edad: int = Form(...),
+                              sexo: str = Form(...), motivo: str = Form(...), motivo_otro: str = Form(""),
+                              archivo: UploadFile = File(None), ejemplo: str = Form(None)):
+    if not _usuario(request):
+        return RedirectResponse("/login")
+    motivo_final = motivo_otro.strip() if motivo == "__otro__" and motivo_otro.strip() else motivo
+    nombre_arch, datos = None, None
+    if ejemplo:
+        ruta = DEMO / ejemplo
+        if ruta.exists():
+            nombre_arch, datos = ejemplo, ruta.read_bytes()
+    elif archivo and archivo.filename:
+        nombre_arch, datos = archivo.filename, await archivo.read()
+    if not datos or not nombre.strip():
+        ejemplos = sorted(f.name for f in DEMO.glob("*.png")) if DEMO.exists() else []
+        return plantillas.TemplateResponse(request, "nuevo_paciente.html",
+            _ctx(request, error="Completa el nombre y sube una resonancia (o elige un ejemplo).", ejemplos=ejemplos))
+    try:
+        pred = predecir(Image.open(io.BytesIO(datos)))
+    except Exception:
+        ejemplos = sorted(f.name for f in DEMO.glob("*.png")) if DEMO.exists() else []
+        return plantillas.TemplateResponse(request, "nuevo_paciente.html",
+            _ctx(request, error="No se pudo leer la imagen. Usa un PNG o JPG válido.", ejemplos=ejemplos))
+    pid = bd.crear_paciente(nombre.strip(), edad, sexo, motivo_final)
+    eid = bd.guardar_estudio(pid, nombre_arch, pred)
+    return RedirectResponse(f"/resultado/{eid}", status_code=303)
 
 
 @app.get("/caso/{pid}", response_class=HTMLResponse)
@@ -237,4 +297,5 @@ async def demo_imagen(nombre: str):
 
 bd.iniciar()
 _preparar_demo()
+_sembrar_estudios()
 app.mount("/estatico", StaticFiles(directory=str(ESTATICO)), name="estatico")

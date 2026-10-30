@@ -2,12 +2,15 @@
 {% set seccion = 'casos' %}
 {% block titulo %}Casos — NeuroBRISC{% endblock %}
 {% block contenido %}
-<div class="encabezado-seccion">
-  <h1>Casos de neuro-oncología</h1>
-  <p class="subtitulo">Pacientes ficticios con estudios de resonancia. Abre un caso para iniciar un nuevo estudio.</p>
+<div class="encabezado-seccion fila">
+  <div>
+    <h1>Casos de neuro-oncología</h1>
+    <p class="subtitulo">Pacientes y estudios de resonancia. Abre un caso o registra un paciente nuevo. <span class="tenue">(Datos de demostración.)</span></p>
+  </div>
+  <a class="boton" href="/paciente/nuevo">+ Nuevo paciente</a>
 </div>
 <table class="tabla">
-  <thead><tr><th>Código</th><th>Paciente (ficticio)</th><th>Edad</th><th>Sexo</th><th>Motivo</th><th>Estudios</th></tr></thead>
+  <thead><tr><th>Código</th><th>Paciente</th><th>Edad</th><th>Sexo</th><th>Motivo</th><th>Último diagnóstico</th><th>Estudios</th></tr></thead>
   <tbody>
   {% for p in pacientes %}
     <tr onclick="location='/caso/{{ p.id }}'">
@@ -16,6 +19,7 @@
       <td>{{ p.edad }}</td>
       <td>{{ p.sexo }}</td>
       <td class="tenue">{{ p.notas }}</td>
+      <td>{% if p.ultimo_dx %}<strong>{{ p.ultimo_dx }}</strong>{% else %}<span class="tenue">—</span>{% endif %}</td>
       <td class="centrado">{{ p.n_estudios }}</td>
     </tr>
   {% endfor %}

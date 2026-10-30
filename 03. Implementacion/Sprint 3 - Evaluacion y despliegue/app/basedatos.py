@@ -15,13 +15,18 @@ AQUI = Path(__file__).resolve().parent
 BD = AQUI / "datos_demo" / "demo.sqlite"
 SAL = "brisc-demo-academica"  # sal fija: es una demo, no seguridad real
 
+# Nombres inventados (no corresponden a personas reales; son datos de demostracion).
 PACIENTES_FICTICIOS = [
-    ("NEO-0001", "Paciente ficticio A", 54, "F", "Cefalea persistente. Estudio de control."),
-    ("NEO-0002", "Paciente ficticio B", 43, "M", "Hallazgo incidental en TC previa."),
-    ("NEO-0003", "Paciente ficticio C", 61, "F", "Seguimiento post-operatorio."),
-    ("NEO-0004", "Paciente ficticio D", 37, "M", "Crisis convulsiva de reciente aparicion."),
-    ("NEO-0005", "Paciente ficticio E", 29, "F", "Alteraciones visuales; descartar lesion selar."),
-    ("NEO-0006", "Paciente ficticio F", 68, "M", "Deterioro cognitivo en estudio."),
+    ("NEO-0001", "Rosa Angélica Huamán Quispe", 54, "F", "Cefalea persistente. Estudio de control."),
+    ("NEO-0002", "Carlos Alberto Ramírez Flores", 43, "M", "Hallazgo incidental en TC previa."),
+    ("NEO-0003", "María Fernanda Chávez Rojas", 61, "F", "Seguimiento post-operatorio."),
+    ("NEO-0004", "Jorge Luis Mendoza Paredes", 37, "M", "Crisis convulsiva de reciente aparición."),
+    ("NEO-0005", "Ana Lucía Torres Vargas", 29, "F", "Alteraciones visuales; descartar lesión selar."),
+    ("NEO-0006", "Pedro Antonio Gutiérrez Ríos", 68, "M", "Deterioro cognitivo en estudio."),
+]
+MOTIVOS = [
+    "Cefalea persistente", "Crisis convulsiva de reciente aparición", "Déficit neurológico focal",
+    "Control post-operatorio", "Hallazgo incidental", "Alteraciones visuales", "Deterioro cognitivo",
 ]
 USUARIOS = [
     ("medico", "Dra. Médico de demostración", "medico", "medico123"),
@@ -82,8 +87,11 @@ def verificar_usuario(usuario, clave):
 
 def pacientes():
     con = conectar()
-    filas = con.execute("""SELECT p.*, (SELECT COUNT(*) FROM estudios e WHERE e.paciente_id=p.id) n_estudios
-                           FROM pacientes p ORDER BY p.codigo""").fetchall()
+    filas = con.execute("""SELECT p.*,
+        (SELECT COUNT(*) FROM estudios e WHERE e.paciente_id=p.id) n_estudios,
+        (SELECT e.clase_es FROM estudios e WHERE e.paciente_id=p.id ORDER BY e.fecha DESC LIMIT 1) ultimo_dx,
+        (SELECT e.id FROM estudios e WHERE e.paciente_id=p.id ORDER BY e.fecha DESC LIMIT 1) ultimo_eid
+        FROM pacientes p ORDER BY p.codigo""").fetchall()
     con.close()
     return [dict(f) for f in filas]
 
@@ -94,6 +102,17 @@ def paciente(pid):
     estudios = con.execute("SELECT * FROM estudios WHERE paciente_id=? ORDER BY fecha DESC", (pid,)).fetchall()
     con.close()
     return (dict(p) if p else None), [dict(e) for e in estudios]
+
+
+def crear_paciente(nombre, edad, sexo, motivo):
+    con = conectar()
+    n = con.execute("SELECT COUNT(*) c FROM pacientes").fetchone()["c"]
+    codigo = f"NEO-{n+1:04d}"
+    cur = con.execute("INSERT INTO pacientes(codigo,nombre,edad,sexo,notas) VALUES(?,?,?,?,?)",
+                      (codigo, nombre, edad, sexo, motivo))
+    pid = cur.lastrowid
+    con.commit(); con.close()
+    return pid
 
 
 def guardar_estudio(paciente_id, archivo_nombre, pred):

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% set seccion = 'casos' %}
+{% block titulo %}Nuevo paciente — NeuroBRISC{% endblock %}
+{% block contenido %}
+<p class="miga"><a href="/casos">Casos</a> / Nuevo paciente</p>
+<div class="encabezado-seccion">
+  <h1>Registrar paciente y estudio</h1>
+  <p class="subtitulo">Completa los datos, sube la resonancia T1 con contraste y el sistema hará el análisis de
+  inmediato. <span class="tenue">Datos de demostración; no se usan pacientes reales.</span></p>
+</div>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+<form method="post" action="/paciente/nuevo" enctype="multipart/form-data" id="formPaciente">
+  <div class="dos-columnas">
+    <section class="subir">
+      <h2>Datos del paciente</h2>
+      <label class="campo">Nombre completo
+        <input type="text" name="nombre" required placeholder="Nombres y apellidos">
+      </label>
+      <div class="campos-fila">
+        <label class="campo">Edad
+          <input type="number" name="edad" min="0" max="120" required value="50">
+        </label>
+        <label class="campo">Sexo
+          <select name="sexo" required>
+            <option value="F">Femenino</option>
+            <option value="M">Masculino</option>
+          </select>
+        </label>
+      </div>
+      <label class="campo">Motivo del estudio
+        <select name="motivo" id="selMotivo" onchange="verOtro()">
+          {% for m in MOTIVOS %}<option value="{{ m }}">{{ m }}</option>{% endfor %}
+          <option value="__otro__">Otro (especificar)…</option>
+        </select>
+      </label>
+      <label class="campo" id="campoOtro" hidden>Especifica el motivo
+        <input type="text" name="motivo_otro" placeholder="Describe el motivo del estudio">
+      </label>
+    </section>
+
+    <section class="subir">
+      <h2>Resonancia (T1 con contraste)</h2>
+      <label class="archivo">
+        <input type="file" name="archivo" accept="image/png,image/jpeg" id="entradaArchivo">
+        <span class="archivo-texto">Seleccionar un archivo PNG o JPG</span>
+      </label>
+      {% if ejemplos %}
+      <p class="o-bien">o usa una imagen de ejemplo:</p>
+      <div class="galeria galeria-radio" id="galeria">
+        {% for ej in ejemplos %}
+        <label class="ejemplo-radio">
+          <input type="radio" name="ejemplo" value="{{ ej }}">
+          <img src="/demo-imagen/{{ ej }}" alt="">
+          <span>{{ ej.split('_')[1].replace('.png','') }}</span>
+        </label>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <p class="nota-pie">El modelo solo conoce resonancias T1 con contraste; si la imagen es de otro tipo, el
+      resultado puede no ser fiable (el sistema lo advierte).</p>
+    </section>
+  </div>
+  <div class="acciones-form">
+    <button type="submit" class="boton" id="botonAnalizar">Registrar y analizar</button>
+    <span class="procesando" id="procesando" hidden>Analizando la resonancia…</span>
+  </div>
+</form>
+{% endblock %}
+{% block scripts %}<script src="/estatico/app.js"></script>{% endblock %}
