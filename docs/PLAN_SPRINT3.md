@@ -231,7 +231,68 @@ Además: el nombre del cuarto integrante figura como «Mamani Acuña Frank Josep
 - [ ] Presentación final con la exposición repartida.
 - [ ] Informe y presentación del Sprint 2 en el repo.
 - [ ] Trello, Excel, Informe de Estado, Minuta, Riesgos, Retrospectivas y Acta de Cierre al día.
+- [ ] **Formato y canal de la entrega final confirmados con el docente** (sección 15.1).
+- [ ] README de la raíz del repositorio actualizado (cómo instalar y ejecutar la aplicación).
+- [ ] Copia de seguridad de la app y los modelos fuera de tu computadora (sección 15.5).
 - [ ] Todo subido a https://github.com/Calamar49/CNN-BRISC.
 
 ## 14. Enlaces
 Repositorio https://github.com/Calamar49/CNN-BRISC · Trello https://trello.com/b/swXjkoyS/product-backlog-proyecto-redes-neuronales-brisc · BRISC https://www.kaggle.com/datasets/briscdataset/brisc2025/ · artículo https://arxiv.org/abs/2506.14318 y https://www.nature.com/articles/s41597-026-06753-y · plantillas del docente https://github.com/hespetia/gestion-proyectos · ONNX Runtime https://onnxruntime.ai/ · PyTorch https://pytorch.org/get-started/locally/
+
+## 15. Complementos que no debes olvidar
+### 15.1 Confirma con el docente (hoy, antes de seguir)
+No se sabe y cambia lo que debes preparar:
+- **Formato y canal de la entrega final:** ¿enlace al repositorio, archivo comprimido, subida a una plataforma? ¿Qué archivos exactamente (informe, presentación, código, modelos, aplicación)?
+- **Duración de la exposición** y si espera **demo en vivo**.
+- **Fecha y hora** de la presentación del 30 de octubre.
+- **Qué computadora** se usará para presentar (la tuya, la del aula): la demo debe probarse en esa.
+- Si acepta el ajuste del «¿para dónde?» del acta (sección 3).
+
+### 15.2 La aplicación: créditos, uso y privacidad
+- **Créditos y licencia (obligatorio, CC BY 4.0):** una página «Acerca de» o el pie de la ficha del modelo con la cita de BRISC (Fateh y colaboradores, arXiv 2506.14318 y *Scientific Data*) y el enlace al dataset. Aclara que las imágenes de ejemplo son de ese dataset público.
+- **Uso previsto y no previsto** en la ficha del modelo: previsto = demostración académica y apoyo a la lectura del médico; **no previsto** = diagnóstico, uso con pacientes reales, otras secuencias o escáneres.
+- **Privacidad:** todo se procesa **en local**, sin enviar imágenes a ningún servicio; **no se guardan las imágenes subidas** ni datos personales en el registro de monitoreo; los pacientes son ficticios. Dilo en la pantalla y en el informe.
+- **Inicio de sesión de demostración:** usuarios y contraseñas ficticios, guardados con *hash* (no en texto plano) si usas una base de datos; que no se confunda con seguridad real.
+
+### 15.3 Pruebas mínimas antes de presentar
+No hace falta un conjunto grande; bastan tres comprobaciones, guardadas como script para poder repetirlas:
+1. **Paridad ONNX frente a PyTorch** (sección 6.2) en 20 imágenes de validación.
+2. **Preprocesamiento idéntico:** la imagen que entra a la app produce el mismo tensor que el cargador de entrenamiento (`datos.py`) para 5 imágenes.
+3. **Recorrido completo de la aplicación** con las 5 o 6 imágenes de ejemplo y con un archivo inválido, midiendo el tiempo por imagen.
+
+### 15.4 Cómo se ejecuta la demo (que cualquiera la levante)
+- Un **script de inicio** (por ejemplo `iniciar_demo.bat` en Windows) que active el entorno y abra la aplicación, y un README con los pasos.
+- **Versiones fijadas** (`requirements-app.txt` con `pip freeze`) y la versión de Python con la que probaste. Tu entorno de entrenamiento fue Python 3.12.8, PyTorch 2.11.0 con CUDA 12.8 y una GPU RTX 5060; la aplicación usa solo CPU, así que no debe depender de la GPU.
+- Prueba en un **entorno limpio** (otra carpeta, otro usuario o otra computadora) antes de la presentación.
+
+### 15.5 Copia de seguridad
+- Haz **commits y `git push` frecuentes** (cada bloque de trabajo terminado), incluso si no está pulido.
+- Guarda una **copia de la app, de los modelos exportados (`.onnx`) y de las diapositivas** en un USB y en la nube. El repositorio no contiene los pesos ni los `.onnx` si superan los 100 MB.
+- Lleva a la presentación el **video o las capturas** de la demo.
+
+### 15.6 Preguntas probables del docente (y respuestas honestas)
+| Pregunta | Respuesta honesta |
+|---|---|
+| ¿Por qué la precisión es tan alta (~99 %)? | Son cifras de **validación**; en la prueba oficial pueden ser menores. BRISC es un dataset curado, con ~80 % de imágenes con tumor, y hay riesgo de atajo por procedencia (R09) que se midió por plano y tipo de archivo. |
+| ¿Se puede usar con pacientes? | No. Es una demostración académica y un apoyo a la lectura, no un diagnóstico; solo conoce T1 con contraste de un dataset público. |
+| ¿Qué pasa si el modelo se equivoca? | El médico revisa y decide; el sistema muestra la probabilidad y una alerta de confianza baja; se muestran casos de error en el análisis (HU12). |
+| ¿Por qué la U-Net no dice «sin tumor»? | Se entrenó solo con imágenes con máscara; por eso el clasificador decide primero y, si dice «sin tumor», no se muestra máscara. |
+| ¿Cómo se evitó la fuga entre entrenamiento y evaluación? | Partición propia con grupos por hash perceptual, prueba oficial intacta y evaluada una sola vez; se reporta aparte el subconjunto sin imágenes parecidas al entrenamiento. |
+| ¿Por qué un sistema «para clínicas» si no hay clínica? | Es un prototipo: el flujo de apoyo al diagnóstico es real; los demás módulos son maqueta; no hay datos de pacientes reales. |
+| ¿Cómo se reproduce todo? | Con los comandos de los README, la semilla 42, las versiones fijadas y el registro de modelos (HU14). |
+
+### 15.7 Qué decir si HU12 no cumple las metas
+Si algún resultado de la prueba queda por debajo de la meta del acta (por ejemplo, el IoU del glioma): **dilo tal cual**, con la causa más probable (contraste bajo del glioma, diferencias entre la prueba y el entrenamiento, imágenes parecidas), sin reentrenar ni cambiar umbrales para corregirlo. Preséntalo como un hallazgo y como trabajo futuro. El acta fija las metas sobre la prueba oficial; la honestidad pesa más que cumplirlas.
+
+### 15.8 Horario sugerido para hoy y mañana [propuesta]
+| Bloque | Qué |
+|---|---|
+| Hoy, bloque 1 (1,5 a 2 h) | Localizar los `.pt`, escribir y ejecutar `evaluar_prueba.py` (HU12) y guardar resultados |
+| Hoy, bloque 2 (1 a 1,5 h) | `exportar_onnx.py`, paridad y registro de modelos |
+| Hoy, bloque 3 (3 a 4 h) | Flujo principal de la aplicación (pantallas 1 a 8) con datos ficticios e imágenes de ejemplo |
+| Hoy, en paralelo | Tus compañeros actualizan las diapositivas con los resultados y ensayan su parte |
+| Hoy, cierre (1 h) | Pruebas de la sección 15.3, copia de seguridad, ensayo general |
+| 30 oct | Exposición y demo (con plan alternativo a mano) |
+| 31 oct | Solo imprevistos |
+| 1 a 2 nov | Informe final revisado por los 4, MLOps básico, cierre de gestión y entrega |
+Si te atrasas, **no recortes** HU12 ni el flujo principal sin internet; recorta primero la maqueta, la ficha del modelo y el monitoreo.
