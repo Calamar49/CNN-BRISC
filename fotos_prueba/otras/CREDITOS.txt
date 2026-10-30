@@ -1,0 +1,20 @@
+Créditos de las imágenes de otras fuentes (atribución obligatoria)
+==================================================================
+
+Las imágenes wikimedia_t1_01.jpg, wikimedia_t1_02.jpg, wikimedia_t1_04.jpg y
+wikimedia_t1_09.jpg son resonancias cerebrales T1 axiales descargadas de
+Wikimedia Commons. Son de OTRA fuente (otro escáner/sujeto), no del dataset
+BRISC, y sirven para probar cómo generaliza el sistema.
+
+  Autor:    Usuario "511KeV" (Wikimedia Commons)
+  Licencia: Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0)
+  Fuente:   https://commons.wikimedia.org/wiki/File:MRI_Brain_T1_Axial_(1).jpg
+            https://commons.wikimedia.org/wiki/File:MRI_Brain_T1_Axial_(2).jpg
+            https://commons.wikimedia.org/wiki/File:MRI_Brain_T1_Axial_(4).jpg
+            https://commons.wikimedia.org/wiki/File:MRI_Brain_T1_Axial_(9).jpg
+
+La licencia CC BY-SA 4.0 exige citar al autor y mantener la misma licencia en
+las obras derivadas. Ver https://creativecommons.org/licenses/by-sa/4.0/
+
+ejemplo_fuera_de_dominio.png NO es una resonancia: es una imagen sintética para
+mostrar la advertencia del sistema ante entradas que no conoce.
