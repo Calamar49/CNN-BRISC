@@ -6,7 +6,7 @@ Convención: **[decidido]** lo acordado con el equipo, **[criterio Trello]** lo 
 ## 0. Cómo empezar
 1. Haz `git pull` del repositorio https://github.com/Calamar49/CNN-BRISC y ábrelo con Claude Code (lee `CLAUDE.md` solo).
 2. Primer mensaje sugerido: *«Lee CLAUDE.md, docs/TRASPASO_SPRINT2.md y docs/PLAN_SPRINT3.md. Empieza por la sección 4 (qué hacer primero). No inventes datos, no uses la prueba oficial antes de HU12 y pregúntame lo que no esté claro.»*
-3. **Confirmar con el docente y el equipo las fechas reales.** Según el Gantt: presentación final **30 oct**, margen **31 oct** (solo imprevistos), entrega límite **2 nov 2026**. Hoy es 29 oct: casi todo es urgente, por eso el plan tiene prioridades (sección 4).
+3. **Confirma con el docente y con tu equipo las fechas reales.** Según el Gantt: presentación final **30 oct**, margen **31 oct** (solo imprevistos), entrega límite **2 nov 2026**. Hoy es 29 oct: casi todo es urgente, por eso el plan tiene prioridades (sección 4).
 
 ## 1. Estado de partida
 | Parte | Estado |
