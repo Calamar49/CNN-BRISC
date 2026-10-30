@@ -21,3 +21,13 @@ herramientas/informe_sprint1.docx
 herramientas/figs_sprint2/
 herramientas/informe_sprint2.docx
 herramientas/presentacion_sprint2.pptx
+
+# Sprint 3 (evaluacion y despliegue): pesos, modelos ONNX, salidas, imagenes de ejemplo e informe/deck
+salida_sprint3/
+*.onnx
+*.onnx.data
+03. Implementacion/Sprint 3 - Evaluacion y despliegue/app/estatico/ejemplos/
+herramientas/figs_sprint3/
+herramientas/informe_sprint3.docx
+herramientas/presentacion_sprint3.pptx
+herramientas/capturas_app/

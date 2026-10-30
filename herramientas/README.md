@@ -24,5 +24,16 @@ Orden: `python gen_figs.py` → `python build_informe.py` / `python deck_light.p
 
 Orden: `python gen_figs_sprint2.py` → `python gen_figs_sprint2_extra.py` → `python build_informe_sprint2.py` / `python build_slides_sprint2.py`.
 
-Estilo: fondo blanco, formal; paleta `#1F3864 #5B84B1 #2B7A8B #8FB89A #9AA5B1`; sin naranja. Los `.docx` y las carpetas de
-figuras generadas no se suben a Git (son reproducibles con estos scripts); solo se sube el código.
+**Sprint 3** (requieren haber corrido la evaluación del Sprint 3, para tener `salida_sprint3/evaluacion_prueba.json` y `registro_modelos.json`):
+
+| Script | Qué hace |
+|---|---|
+| `gen_figs_sprint3.py` | Figuras reales de la evaluación en la prueba oficial (validación vs prueba, matriz de confusión, recall por clase, IoU/Dice por clase, desglose por tipo de archivo R09) en `herramientas/figs_sprint3/`, y reúne allí las capturas reales de la app. Todo sale de `salida_sprint3/evaluacion_prueba.json`. |
+| `build_informe_sprint3.py` | Genera el informe final del Sprint 3 en Word (`herramientas/informe_sprint3.docx`): evaluación en la prueba oficial, aplicación web con capturas reales, MLOps, limitaciones y glosario. Lee `evaluacion_prueba.json`, `registro_modelos.json` y las tarjetas de modelo. |
+| `build_slides_sprint3.py` | Genera `herramientas/presentacion_sprint3.pptx` (15 diapositivas) para la Revisión del Sprint 3, con el mismo estilo del Sprint 1/2. Cada cifra se lee de los JSON del Sprint 3 en tiempo de ejecución. |
+
+Orden: (correr antes `evaluar_prueba.py` del Sprint 3) → `python gen_figs_sprint3.py` → `python build_informe_sprint3.py` / `python build_slides_sprint3.py`.
+Las capturas de la app (`herramientas/capturas_app/`) se toman a mano del visor en funcionamiento; no se regeneran por script.
+
+Estilo: fondo blanco, formal; paleta `#1F3864 #5B84B1 #2B7A8B #8FB89A #9AA5B1`; sin naranja. Los `.docx`, los `.pptx`
+y las carpetas de figuras/capturas generadas no se suben a Git (son reproducibles con estos scripts); solo se sube el código.
