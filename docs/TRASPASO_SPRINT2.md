@@ -1,5 +1,7 @@
 # Traspaso para el Sprint 2 (modelado)
 
+> **Actualización 29 de octubre de 2026:** el Sprint 2 técnico ya está hecho; el plan vigente es `docs/PLAN_SPRINT3.md`. Este documento queda como contexto (entorno, protocolo de modelado, hallazgos).
+
 Documento para quien continúe el proyecto y trabaje con su propio Claude. Fecha: **22 de octubre de 2026**.
 Lo que está medido o verificado se dice como tal; lo que es **propuesta** o **por confirmar** también.
 
