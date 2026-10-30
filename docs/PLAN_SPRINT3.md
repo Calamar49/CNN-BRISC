@@ -15,7 +15,7 @@ Convención: **[decidido]** lo acordado con el equipo, **[criterio Trello]** lo 
 | Sprint 2 técnico (HU05–HU09) | **Hecho en el repo:** pipeline, 13 entrenamientos en `experimentos.csv`, modelos elegidos, desglose por plano y tipo de archivo (R09). Todo con **validación**; la prueba oficial no se tocó. |
 | Informe y presentación del Sprint 2 | Existen en el equipo de quien los generó (`informe_sprint2.docx`, `presentacion_sprint2.pptx`); **no están en el repo** (el `.gitignore` los excluye). Subirlos a `03. Implementacion/` y `04. Revision y retrospectiva/`. |
 | Gestión del Sprint 2 | **Sin hacer:** Trello (HU06–HU17 en «Product Backlog», lista «Sprint 2» vacía), Backlog del Sprint 2 (Excel con ejemplos de plantilla), Informe de Estado, Minuta, R09, Retrospectiva. |
-| Pesos de los modelos | Solo en `salida_sprint2/` del equipo que entrenó (Git los ignora). **Hay que pasarlos.** |
+| Pesos de los modelos | Están en `salida_sprint2/` del equipo de quien hizo el Sprint 2, que es quien ejecuta P0 y P1 (Git los ignora). Si otra persona va a usar la app, pasarle los modelos exportados (`.onnx`) y `registro_modelos.json`. |
 
 ### Modelos elegidos en el Sprint 2 (de `experimentos.csv`; métricas de validación)
 | Tarea | Configuración | Corridas (`salida_sprint2/<id>.pt`) | Resultado en validación |
@@ -47,7 +47,7 @@ Formato de los puntos de control: clasificador `{"modelo": state_dict, "arquitec
 
 ## 4. Qué hacer primero (orden y prioridades)
 **P0, imprescindible para la presentación del 30 oct**
-1. Conseguir los `.pt` y **ejecutar HU12** (sección 5): una sola evaluación en la prueba oficial. *(1 a 2 h)*
+1. Localizar los `.pt` (en `salida_sprint2/`) y **ejecutar HU12** (sección 5): una sola evaluación en la prueba oficial. *(1 a 2 h)*
 2. **Exportar los modelos a ONNX** y verificar que dan lo mismo que PyTorch (sección 6.2). *(1 h)*
 3. **Flujo principal de la aplicación funcionando en local y sin internet** (sección 6.3 a 6.6), con 5 o 6 imágenes de ejemplo. *(el resto del día)*
 4. **Diapositivas finales** con los resultados de prueba y la demo; repartir la exposición entre los 4. *(en paralelo)*
@@ -61,7 +61,7 @@ Formato de los puntos de control: clasificador `{"modelo": state_dict, "arquitec
 **P2, si sobra tiempo:** maqueta de los otros módulos, ficha del modelo dentro de la app, informe PDF del caso, página de monitoreo.
 **P3, recortar sin culpa:** publicación en línea, versión solo-navegador con `onnxruntime-web`, soporte DICOM, HU11 (multitarea) y el reentrenamiento con 5.000 imágenes.
 
-**Reparto sugerido por rol [propuesta]:** una persona en evaluación y modelos (HU12 + exportación), otra en la aplicación (HU13), otra en informe (HU15) y otra en presentación y gestión (HU16, Trello, Excel). Pueden rotar; HU12 y la exportación son lo primero porque la app depende de ellas.
+**Reparto [decidido]:** quien hizo el Sprint 2 (tiene el entorno y los `.pt`) ejecuta **P0 y P1**. Los otros 3 integrantes no deben quedar sin tareas: **revisar el informe final** (HU15 exige revisión de los 4), **preparar y ensayar su parte de la exposición** (HU16) y hacer la gestión que solo el equipo puede hacer (retrospectivas, minutas y Trello con revisión cruzada). Si quien ejecuta se satura, lo primero que se delega es la maqueta de módulos y las diapositivas. HU12 y la exportación van primero porque la app depende de ellas.
 
 ## 5. HU12: evaluación única en la prueba oficial
 **Regla de oro:** la prueba se evalúa **una vez**. No se cambia nada después de ver los números: ni arquitectura, ni umbrales, ni se reentrena para mejorar la prueba. Se reporta lo que salga, aunque no cumpla las metas.
@@ -207,7 +207,7 @@ Además: el nombre del cuarto integrante figura como «Mamani Acuña Frank Josep
 | Riesgo | Mitigación |
 |---|---|
 | **Falta de tiempo** (hoy es 29 oct) | Respetar las prioridades P0 a P3; recortar P3 primero |
-| **No se tienen los `.pt`** | Pedirlos ya a quien entrenó; sin ellos no hay HU12 ni app real (hasta entonces, la interfaz puede avanzar con un resultado **simulado**, marcado como tal) |
+| **Todo recae en una sola persona** | Delegar a los otros 3 la revisión, la exposición y la gestión de equipo; recortar P2 y P3 antes que P0 o P1. Si otra persona necesita correr la app, pasarle los `.onnx` (los `.pt` no hacen falta) |
 | **R05: modelo pesado** (U-Net ~100 MB) | ONNX en CPU local; fp16 o Release de GitHub si hace falta |
 | **Falla la exportación de la U-Net** | Probar otro `opset_version` y revisar versiones; verificar paridad |
 | **Resultado en la prueba peor que en validación** | Es esperable (la prueba difiere del entrenamiento y hay imágenes parecidas): reportar con honestidad, no corregir mirando la prueba |
