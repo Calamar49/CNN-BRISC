@@ -1,10 +1,10 @@
 # Plan del Sprint 3: evaluación, despliegue y cierre del proyecto
 
-Escrito el **29 de octubre de 2026** para quien lo ejecute con su propio Claude. Cubre todo el Sprint 3 (HU12 a HU17), el sistema web con el flujo principal de apoyo al diagnóstico acordado con el equipo, el MLOps básico y el cierre de gestión.
-Convención: **[decidido]** lo acordado con el equipo, **[criterio Trello]** lo que ya figura como criterio de aceptación, **[propuesta]** lo que sugiero y hay que confirmar.
+Escrito el **29 de octubre de 2026** para ti, que lo vas a ejecutar con tu Claude. **Tú hiciste el Sprint 2 y tienes los modelos y el entorno, así que tú ejecutas la prioridad P0 y la P1 (sección 4).** Este plan cubre todo el Sprint 3 (HU12 a HU17), el sistema web con el flujo principal de apoyo al diagnóstico acordado con el equipo, el MLOps básico y el cierre de gestión.
+Convención: **[decidido]** lo acordado con el equipo, **[criterio Trello]** lo que ya figura como criterio de aceptación, **[propuesta]** lo que se sugiere y debes confirmar con el equipo.
 
 ## 0. Cómo empezar
-1. `git pull` del repositorio https://github.com/Calamar49/CNN-BRISC y abrirlo con Claude Code (lee `CLAUDE.md` solo).
+1. Haz `git pull` del repositorio https://github.com/Calamar49/CNN-BRISC y ábrelo con Claude Code (lee `CLAUDE.md` solo).
 2. Primer mensaje sugerido: *«Lee CLAUDE.md, docs/TRASPASO_SPRINT2.md y docs/PLAN_SPRINT3.md. Empieza por la sección 4 (qué hacer primero). No inventes datos, no uses la prueba oficial antes de HU12 y pregúntame lo que no esté claro.»*
 3. **Confirmar con el docente y el equipo las fechas reales.** Según el Gantt: presentación final **30 oct**, margen **31 oct** (solo imprevistos), entrega límite **2 nov 2026**. Hoy es 29 oct: casi todo es urgente, por eso el plan tiene prioridades (sección 4).
 
@@ -13,9 +13,9 @@ Convención: **[decidido]** lo acordado con el equipo, **[criterio Trello]** lo 
 |---|---|
 | Sprint 1 (HU01–HU04) | Terminado: negocio, datos y preparación. Informe y presentación hechos. |
 | Sprint 2 técnico (HU05–HU09) | **Hecho en el repo:** pipeline, 13 entrenamientos en `experimentos.csv`, modelos elegidos, desglose por plano y tipo de archivo (R09). Todo con **validación**; la prueba oficial no se tocó. |
-| Informe y presentación del Sprint 2 | Existen en el equipo de quien los generó (`informe_sprint2.docx`, `presentacion_sprint2.pptx`); **no están en el repo** (el `.gitignore` los excluye). Subirlos a `03. Implementacion/` y `04. Revision y retrospectiva/`. |
+| Informe y presentación del Sprint 2 | Los tienes tú (`informe_sprint2.docx`, `presentacion_sprint2.pptx`); **no están en el repo** (el `.gitignore` los excluye). **Súbelos** a `03. Implementacion/` y `04. Revision y retrospectiva/`. |
 | Gestión del Sprint 2 | **Sin hacer:** Trello (HU06–HU17 en «Product Backlog», lista «Sprint 2» vacía), Backlog del Sprint 2 (Excel con ejemplos de plantilla), Informe de Estado, Minuta, R09, Retrospectiva. |
-| Pesos de los modelos | Están en `salida_sprint2/` del equipo de quien hizo el Sprint 2, que es quien ejecuta P0 y P1 (Git los ignora). Si otra persona va a usar la app, pasarle los modelos exportados (`.onnx`) y `registro_modelos.json`. |
+| Pesos de los modelos | Están en tu carpeta `salida_sprint2/` (Git los ignora). Tú exportas los modelos a `.onnx`; si alguno de tus compañeros necesita correr la app, le entregas los `.onnx` y `registro_modelos.json`. |
 
 ### Modelos elegidos en el Sprint 2 (de `experimentos.csv`; métricas de validación)
 | Tarea | Configuración | Corridas (`salida_sprint2/<id>.pt`) | Resultado en validación |
@@ -47,21 +47,21 @@ Formato de los puntos de control: clasificador `{"modelo": state_dict, "arquitec
 
 ## 4. Qué hacer primero (orden y prioridades)
 **P0, imprescindible para la presentación del 30 oct**
-1. Localizar los `.pt` (en `salida_sprint2/`) y **ejecutar HU12** (sección 5): una sola evaluación en la prueba oficial. *(1 a 2 h)*
-2. **Exportar los modelos a ONNX** y verificar que dan lo mismo que PyTorch (sección 6.2). *(1 h)*
-3. **Flujo principal de la aplicación funcionando en local y sin internet** (sección 6.3 a 6.6), con 5 o 6 imágenes de ejemplo. *(el resto del día)*
-4. **Diapositivas finales** con los resultados de prueba y la demo; repartir la exposición entre los 4. *(en paralelo)*
-5. **Demo probada y plan alternativo** (capturas o video) y **ensayo general**. *(antes de dormir)*
+1. Localiza tus `.pt` (en `salida_sprint2/`) y **ejecuta HU12** (sección 5): una sola evaluación en la prueba oficial. *(1 a 2 h)*
+2. **Exporta los modelos a ONNX** y verifica que dan lo mismo que PyTorch (sección 6.2). *(1 h)*
+3. **Construye el flujo principal de la aplicación, funcionando en local y sin internet** (sección 6.3 a 6.6), con 5 o 6 imágenes de ejemplo. *(el resto del día)*
+4. **Actualiza las diapositivas finales** con los resultados de prueba y la demo, y reparte la exposición entre los 4. *(en paralelo)*
+5. **Prueba la demo, prepara el plan alternativo** (capturas o video) y haz el **ensayo general**. *(antes de dormir)*
 
 **P1, después de la presentación (31 oct es solo para imprevistos; 1 y 2 nov para esto)**
-6. MLOps básico (HU14): registro de modelos, etiquetas en Git, registro de predicciones, README de reproducción.
-7. **Informe final** (HU15), revisado por los 4.
-8. Cierre de gestión: Trello, Excel, Informe de Estado, Minuta, Riesgos, Retrospectivas, Acta de Cierre (sección 9).
+6. **Haz el MLOps básico (HU14):** registro de modelos, etiquetas en Git, registro de predicciones, README de reproducción.
+7. **Redacta el informe final** (HU15) y consigue que lo revisen los 4.
+8. **Cierra la gestión:** Trello, Excel, Informe de Estado, Minuta, Riesgos, Retrospectivas y Acta de Cierre (sección 9).
 
 **P2, si sobra tiempo:** maqueta de los otros módulos, ficha del modelo dentro de la app, informe PDF del caso, página de monitoreo.
 **P3, recortar sin culpa:** publicación en línea, versión solo-navegador con `onnxruntime-web`, soporte DICOM, HU11 (multitarea) y el reentrenamiento con 5.000 imágenes.
 
-**Reparto [decidido]:** quien hizo el Sprint 2 (tiene el entorno y los `.pt`) ejecuta **P0 y P1**. Los otros 3 integrantes no deben quedar sin tareas: **revisar el informe final** (HU15 exige revisión de los 4), **preparar y ensayar su parte de la exposición** (HU16) y hacer la gestión que solo el equipo puede hacer (retrospectivas, minutas y Trello con revisión cruzada). Si quien ejecuta se satura, lo primero que se delega es la maqueta de módulos y las diapositivas. HU12 y la exportación van primero porque la app depende de ellas.
+**Reparto [decidido]: tú ejecutas P0 y P1.** Tus 3 compañeros no se quedan sin tareas: **revisan el informe final** (HU15 exige la revisión de los 4), **preparan y ensayan su parte de la exposición** (HU16) y hacen contigo la gestión que solo el equipo puede hacer (retrospectivas, minutas y Trello con revisión cruzada). **Pídeselo:** tú no puedes marcar esos criterios solo. Si te saturas, lo primero que delegas es la maqueta de módulos y las diapositivas. HU12 y la exportación van primero porque la app depende de ellas.
 
 ## 5. HU12: evaluación única en la prueba oficial
 **Regla de oro:** la prueba se evalúa **una vez**. No se cambia nada después de ver los números: ni arquitectura, ni umbrales, ni se reentrena para mejorar la prueba. Se reporta lo que salga, aunque no cumpla las metas.
@@ -182,20 +182,20 @@ Reutilizar `03. Implementacion/Informe del Sprint 1.docx`, `informe_sprint2.docx
 - **Guion de la demo (2 a 3 min):** iniciar sesión → abrir un caso → subir una T1 → ver clase, probabilidades y máscara → revisión del médico → informe → mostrar la ficha del modelo y un caso difícil.
 - **Ensayo general** con cronómetro y con el plan alternativo preparado.
 
-## 9. Gestión Scrum y cierre (a cargo del equipo)
+## 9. Gestión Scrum y cierre (la haces tú, con tus compañeros donde se indica)
 | Entregable | Dónde | Qué hacer |
 |---|---|---|
-| Trello | tablero (`CLAUDE.md`) | Mover HU06–HU11 a «Sprint 2» y HU12–HU17 a «Sprint 3», asignar responsables, y marcar criterios **solo cuando estén cumplidos y revisados por otra persona**; comentarios con resultados |
-| Backlog del Sprint | `02. Planificacion/Backlog del Sprint.xlsx` | Reemplazar los ejemplos de la hoja «Sprint 2» por las tareas reales; crear la hoja «Sprint 3» copiando «Plantilla Sprint» |
-| Hojas «Sprints» | `Backlog del Producto.xlsx` y `Backlog Detallado del Producto.xlsx` | Sustituir las fechas de la plantilla (2018) por los 3 sprints reales |
-| Informe de Estado y Minutas | `03. Implementacion/` | Actualizar con el avance real; fechas, lugar y acuerdos reales del equipo |
-| Registro de Riesgos e Impedimentos | `02. Planificacion/`, `03. Implementacion/` | Agregar R09 y los riesgos nuevos; anotar impedimentos reales |
-| Cronograma (CSV del Gantt) | `02. Planificacion/` | Actualizar la columna Progress |
-| Retrospectivas | `04. Revision y retrospectiva/` y `05. Lanzamiento/Retrospectiva del Proyecto.pptx` | Hacerlas **con el equipo**; no escribir respuestas por ellos |
-| Acta de Cierre | `06. Cierre/Acta de Cierre de Proyecto.docx` | Llenar al final con datos reales; es plantilla sin llenar |
-| Presupuesto | `02. Planificacion/Presupuesto del Proyecto.xls` | Confirmar el gasto real (se programó S/ 0) |
-| Informe y presentaciones del Sprint 2 | repo | Subir los archivos que hoy solo están en el equipo de quien los generó |
-Además: el nombre del cuarto integrante figura como «Mamani Acuña Frank Joseph» en los documentos y como «Joseph Zevallos Acuña» en Trello; comprobar cuál es correcto.
+| Trello | tablero (`CLAUDE.md`) | Mueve HU06–HU11 a «Sprint 2» y HU12–HU17 a «Sprint 3», asigna responsables, y marca los criterios **solo cuando estén cumplidos y revisados por otro integrante**; deja comentarios con los resultados |
+| Backlog del Sprint | `02. Planificacion/Backlog del Sprint.xlsx` | Reemplaza los ejemplos de la hoja «Sprint 2» por las tareas reales; crea la hoja «Sprint 3» copiando «Plantilla Sprint» |
+| Hojas «Sprints» | `Backlog del Producto.xlsx` y `Backlog Detallado del Producto.xlsx` | Sustituye las fechas de la plantilla (2018) por los 3 sprints reales |
+| Informe de Estado y Minutas | `03. Implementacion/` | Actualiza con el avance real; usa las fechas, el lugar y los acuerdos reales del equipo (no los inventes) |
+| Registro de Riesgos e Impedimentos | `02. Planificacion/`, `03. Implementacion/` | Agrega R09 y los riesgos nuevos; anota los impedimentos reales |
+| Cronograma (CSV del Gantt) | `02. Planificacion/` | Actualiza la columna Progress |
+| Retrospectivas | `04. Revision y retrospectiva/` y `05. Lanzamiento/Retrospectiva del Proyecto.pptx` | Hazlas **con tus 3 compañeros**; no escribas respuestas por ellos |
+| Acta de Cierre | `06. Cierre/Acta de Cierre de Proyecto.docx` | Llénala al final con datos reales; es una plantilla sin llenar |
+| Presupuesto | `02. Planificacion/Presupuesto del Proyecto.xls` | Confirma el gasto real con el equipo (se programó S/ 0) |
+| Informe y presentaciones del Sprint 2 | repo | **Sube tus archivos** `informe_sprint2.docx` y `presentacion_sprint2.pptx` |
+Además: el nombre del cuarto integrante figura como «Mamani Acuña Frank Joseph» en los documentos y como «Joseph Zevallos Acuña» en Trello; compruébalo con él y corrige el que esté mal.
 
 ## 10. Calidad en CRISP-ML(Q) para estas fases
 - **Evaluación:** criterios de éxito fijados de antemano (las metas del acta), una sola medición en la prueba, resultados por subgrupo y con y sin imágenes parecidas al entrenamiento, y limitaciones declaradas.
@@ -206,8 +206,8 @@ Además: el nombre del cuarto integrante figura como «Mamani Acuña Frank Josep
 ## 11. Riesgos del Sprint 3
 | Riesgo | Mitigación |
 |---|---|
-| **Falta de tiempo** (hoy es 29 oct) | Respetar las prioridades P0 a P3; recortar P3 primero |
-| **Todo recae en una sola persona** | Delegar a los otros 3 la revisión, la exposición y la gestión de equipo; recortar P2 y P3 antes que P0 o P1. Si otra persona necesita correr la app, pasarle los `.onnx` (los `.pt` no hacen falta) |
+| **Falta de tiempo** (hoy es 29 oct) | Respeta las prioridades P0 a P3; recorta P3 primero |
+| **Todo recae en ti** | Pide a tus 3 compañeros la revisión, su parte de la exposición y la gestión de equipo; recorta P2 y P3 antes que P0 o P1. Si alguien necesita correr la app, dale los `.onnx` (los `.pt` no hacen falta) |
 | **R05: modelo pesado** (U-Net ~100 MB) | ONNX en CPU local; fp16 o Release de GitHub si hace falta |
 | **Falla la exportación de la U-Net** | Probar otro `opset_version` y revisar versiones; verificar paridad |
 | **Resultado en la prueba peor que en validación** | Es esperable (la prueba difiere del entrenamiento y hay imágenes parecidas): reportar con honestidad, no corregir mirando la prueba |
